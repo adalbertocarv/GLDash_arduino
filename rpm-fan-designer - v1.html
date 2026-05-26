@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RPM Fan Designer — Gol GL 1990</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg:        #0a0c0f;
+    --surface:   #111418;
+    --surface2:  #181c22;
+    --border:    #252a33;
+    --border2:   #2e3540;
+    --accent:    #00e5ff;
+    --accent2:   #ff6b00;
+    --text:      #c8d0dc;
+    --text2:     #6a7585;
+    --text3:     #8a95a5;
+    --green:     #00ff88;
+    --red:       #ff3366;
+    --mono:      'Share Tech Mono', monospace;
+    --ui:        'Rajdhani', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--ui);
+    font-size: 14px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); flex-shrink: 0; }
+  header h1 { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: .12em; }
+  header span { font-size: 12px; color: var(--text2); margin-left: auto; font-family: var(--mono); }
+
+  /* ── LAYOUT ── */
+  .app {
+    display: grid;
+    grid-template-columns: 300px 1fr 320px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ── PANELS ── */
+  .panel {
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 0;
+  }
+  .panel:last-child { border-right: none; border-left: 1px solid var(--border); }
+
+  .panel-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .15em;
+    color: var(--text2);
+    padding: 12px 16px 8px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    text-transform: uppercase;
+  }
+
+  .section {
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
+
+  .ctrl {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+  }
+  .ctrl:last-child { margin-bottom: 0; }
+  .ctrl label {
+    font-size: 12px;
+    color: var(--text3);
+    min-width: 118px;
+    flex-shrink: 0;
+    font-weight: 500;
+  }
+  .ctrl input[type=range] {
+    flex: 1;
+    min-width: 0;
+    height: 3px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--border2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  .ctrl input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+    cursor: pointer;
+  }
+  .ctrl .val {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    min-width: 38px;
+    text-align: right;
+  }
+  select {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+  }
+  select:focus { border-color: var(--accent); }
+
+  /* ── CENTER CANVAS AREA ── */
+  .center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    background: var(--bg);
+    padding: 32px;
+  }
+
+  .canvas-frame {
+    background: #000;
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    box-shadow: 0 0 0 6px #0d1014, 0 0 0 7px var(--border), 0 0 40px rgba(0,229,255,.08);
+    padding: 0;
+    overflow: hidden;
+    display: block;
+  }
+
+  canvas { display: block; image-rendering: pixelated; }
+
+  /* RPM slider */
+  .rpm-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 480px;
+  }
+  .rpm-row label { font-family: var(--mono); font-size: 11px; color: var(--text2); min-width: 36px; }
+  .rpm-row input[type=range] {
+    flex: 1;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: linear-gradient(90deg, var(--green), var(--accent2), var(--red));
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  .rpm-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(255,255,255,.5);
+    cursor: pointer;
+  }
+  .rpm-row .val { font-family: var(--mono); font-size: 18px; color: #fff; min-width: 54px; text-align: right; }
+
+  /* Gear buttons */
+  .gear-row { display: flex; gap: 8px; }
+  .gear-row button {
+    width: 42px; height: 42px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--text3);
+    font-family: var(--mono);
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .gear-row button:hover { border-color: var(--accent); color: var(--accent); }
+  .gear-row button.active { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 0 10px var(--accent); font-weight: 700; }
+
+  /* ── OUTPUT PANEL ── */
+  .output-panel { display: flex; flex-direction: column; height: 100%; }
+  .output-panel .panel-title { flex-shrink: 0; }
+
+  .tab-row {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .tab {
+    flex: 1;
+    padding: 9px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    color: var(--text2);
+    cursor: pointer;
+    background: var(--surface);
+    border-bottom: 2px solid transparent;
+    transition: all .15s;
+    text-transform: uppercase;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface2); }
+
+  .code-wrap {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+    background: var(--bg);
+  }
+  pre {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    line-height: 1.7;
+    color: #8be;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .kw  { color: #c792ea; }
+  .cm  { color: #546e7a; font-style: italic; }
+  .num { color: #f78c6c; }
+  .str { color: #c3e88d; }
+  .fn  { color: #82aaff; }
+
+  .copy-btn {
+    margin: 10px 14px 14px;
+    flex-shrink: 0;
+    padding: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .2s;
+    text-transform: uppercase;
+  }
+  .copy-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 12px var(--accent); }
+  .copy-btn.ok { background: var(--green); border-color: var(--green); color: #000; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  .info-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text2);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 10px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-dot"></div>
+  <h1>RPM FAN DESIGNER</h1>
+  <span>VW GOL GL 1990 · OLED 2.42" SSD1309 · 128×64px</span>
+</header>
+
+<div class="app">
+
+  <!-- ── PAINEL ESQUERDO: CONTROLES ── -->
+  <div class="panel">
+    <div class="panel-title">// parâmetros do leque</div>
+
+    <div class="section">
+      <div class="section-label">Arco</div>
+      <div class="ctrl"><label>Ângulo ini °</label><input type=range id="a0" min="100" max="260" value="200"><span class="val" id="a0-v">200°</span></div>
+      <div class="ctrl"><label>Ângulo fim °</label><input type=range id="a1" min="260" max="440" value="340"><span class="val" id="a1-v">340°</span></div>
+      <div class="ctrl"><label>Num linhas</label><input type=range id="nl" min="8" max="60" value="34"><span class="val" id="nl-v">34</span></div>
+      <div class="ctrl"><label>Gap °</label><input type=range id="gap" min="0" max="20" value="0" step="1"><span class="val" id="gap-v">0°</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Pivô</div>
+      <div class="ctrl"><label>Pivô X</label><input type=range id="cx" min="0" max="128" value="64"><span class="val" id="cx-v">64</span></div>
+      <div class="ctrl"><label>Pivô Y</label><input type=range id="cy" min="-60" max="130" value="90"><span class="val" id="cy-v">90</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Raio Interno</div>
+      <div class="ctrl"><label>R interno horiz</label><input type=range id="ria" min="0" max="50" value="6"><span class="val" id="ria-v">6</span></div>
+      <div class="ctrl"><label>R interno vert</label><input type=range id="rib" min="0" max="50" value="6"><span class="val" id="rib-v">6</span></div>
+      <div class="ctrl"><label>Oval power (int)</label><input type=range id="ipw" min="10" max="80" value="20" step="1"><span class="val" id="ipw-v">2.0</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Comprimento</div>
+      <div class="ctrl"><label>Compr. lateral</label><input type=range id="wlat" min="1" max="120" value="35"><span class="val" id="wlat-v">35</span></div>
+      <div class="ctrl"><label>Compr. topo</label><input type=range id="wtop" min="1" max="120" value="70"><span class="val" id="wtop-v">70</span></div>
+      <div class="ctrl"><label>Curva compr.</label><input type=range id="wexp" min="5" max="50" value="10" step="1"><span class="val" id="wexp-v">1.0</span></div>
+      <div class="ctrl"><label>Offset compr.</label><input type=range id="roff" min="-30" max="30" value="0"><span class="val" id="roff-v">0</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Espessura (triângulo)</div>
+      <div class="ctrl"><label>Esp. interna (pivô)</label><input type=range id="wIn" min="0" max="60" value="8" step="1"><span class="val" id="wIn-v">0.8</span></div>
+      <div class="ctrl"><label>Esp. externa (borda)</label><input type=range id="wOut" min="0" max="60" value="2" step="1"><span class="val" id="wOut-v">0.2</span></div>
+      <div class="ctrl"><label>Cap interno</label><select id="capIn"><option value="butt" selected>butt</option><option value="square">square</option><option value="round">round</option></select></div>
+      <div class="ctrl"><label>Cap externo</label><select id="capOut"><option value="square" selected>square</option><option value="butt">butt</option><option value="round">round</option></select></div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Linhas Inativas</div>
+      <div class="ctrl"><label>Modo</label>
+        <select id="inactiveMode">
+          <option value="none">apagado (invisível)</option>
+          <option value="line" selected>linha fina 1px (eixo central)</option>
+          <option value="dot2">pontilhado — 1 px a cada 2</option>
+          <option value="dot3">pontilhado — 1 px a cada 3</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Posição — Marcha</div>
+      <div class="ctrl"><label>Marcha X</label><input type=range id="gearX" min="0" max="127" value="64"><span class="val" id="gearX-v">64</span></div>
+      <div class="ctrl"><label>Marcha Y</label><input type=range id="gearY" min="0" max="63" value="52"><span class="val" id="gearY-v">52</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Posição — RPM</div>
+      <div class="ctrl"><label>RPM label X</label><input type=range id="rpmLX" min="0" max="127" value="110"><span class="val" id="rpmLX-v">110</span></div>
+      <div class="ctrl"><label>RPM label Y</label><input type=range id="rpmLY" min="0" max="63" value="37"><span class="val" id="rpmLY-v">37</span></div>
+      <div class="ctrl"><label>RPM valor X</label><input type=range id="rpmVX" min="0" max="127" value="113"><span class="val" id="rpmVX-v">113</span></div>
+      <div class="ctrl"><label>RPM valor Y</label><input type=range id="rpmVY" min="0" max="63" value="50"><span class="val" id="rpmVY-v">50</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Posição — Força G</div>
+      <div class="ctrl"><label>G label X</label><input type=range id="gLX" min="0" max="127" value="2"><span class="val" id="gLX-v">2</span></div>
+      <div class="ctrl"><label>G label Y</label><input type=range id="gLY" min="0" max="63" value="37"><span class="val" id="gLY-v">37</span></div>
+      <div class="ctrl"><label>G valor X</label><input type=range id="gVX" min="0" max="127" value="2"><span class="val" id="gVX-v">2</span></div>
+      <div class="ctrl"><label>G valor Y</label><input type=range id="gVY" min="0" max="63" value="50"><span class="val" id="gVY-v">50</span></div>
+    </div>
+
+  </div>
+
+  <!-- ── CENTRO: PREVIEW ── -->
+  <div class="center">
+    <div class="canvas-frame">
+      <canvas id="oled" width="128" height="64" style="width:512px;height:256px"></canvas>
+    </div>
+
+    <div class="rpm-row">
+      <label>RPM</label>
+      <input type=range id="rpm" min="700" max="7000" step="50" value="3500">
+      <span class="val" id="rpm-v">3500</span>
+    </div>
+
+    <div class="gear-row" id="gear-btns">
+      <button data-g="N">N</button>
+      <button data-g="1">1</button>
+      <button data-g="2">2</button>
+      <button data-g="3" class="active">3</button>
+      <button data-g="4">4</button>
+      <button data-g="5">5</button>
+      <button data-g="R">R</button>
+    </div>
+
+    <div class="info-badge" id="info-badge">
+      linhas ativas: — / — &nbsp;|&nbsp; pivô: (—, —) &nbsp;|&nbsp; arco: —°
+    </div>
+  </div>
+
+  <!-- ── PAINEL DIREITO: CÓDIGO GERADO ── -->
+  <div class="panel output-panel">
+    <div class="panel-title">// código gerado</div>
+    <div class="tab-row">
+      <div class="tab active" data-tab="arrays">PROGMEM arrays</div>
+      <div class="tab" data-tab="full">sketch completo</div>
+      <div class="tab" data-tab="python">gerador python</div>
+    </div>
+    <div class="code-wrap">
+      <pre id="code-out"></pre>
+    </div>
+    <button class="copy-btn" id="copy-btn">⎘ copiar código</button>
+  </div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// Estado
+// ─────────────────────────────────────────────
+const canvas = document.getElementById('oled');
+const ctx = canvas.getContext('2d');
+const W = 128, H = 64, RPM_MIN = 700, RPM_MAX = 7000;
+let rpm = 3500, gear = '3', activeTab = 'arrays';
+
+// ─────────────────────────────────────────────
+// Sliders config
+// ─────────────────────────────────────────────
+const SLIDERS = {
+  a0:   v => v + '°',
+  a1:   v => v + '°',
+  nl:   v => Math.round(v),
+  gap:  v => v + '°',
+  cx:   v => v,
+  cy:   v => v,
+  ria:  v => v,
+  rib:  v => v,
+  ipw:  v => (v / 10).toFixed(1),
+  wlat: v => v,
+  wtop: v => v,
+  wexp: v => (v / 10).toFixed(1),
+  roff: v => v,
+  wIn:  v => (v / 10).toFixed(1),
+  wOut: v => (v / 10).toFixed(1),
+  gearX: v => v, gearY: v => v,
+  rpmLX: v => v, rpmLY: v => v,
+  rpmVX: v => v, rpmVY: v => v,
+  gLX:   v => v, gLY:   v => v,
+  gVX:   v => v, gVY:   v => v,
+};
+
+Object.keys(SLIDERS).forEach(id => {
+  const el = document.getElementById(id);
+  const out = document.getElementById(id + '-v');
+  if (!el) return;
+  el.addEventListener('input', () => {
+    if (out) out.textContent = SLIDERS[id](el.value);
+    render(); updateCode();
+  });
+});
+
+['capIn', 'capOut', 'inactiveMode'].forEach(id =>
+  document.getElementById(id).addEventListener('change', () => { render(); updateCode(); })
+);
+
+document.getElementById('rpm').addEventListener('input', e => {
+  rpm = parseInt(e.target.value);
+  document.getElementById('rpm-v').textContent = rpm;
+  render();
+});
+
+document.getElementById('gear-btns').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-g]');
+  if (!btn) return;
+  document.querySelectorAll('#gear-btns button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  gear = btn.dataset.g;
+  render();
+});
+
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    activeTab = t.dataset.tab;
+    updateCode();
+  });
+});
+
+document.getElementById('copy-btn').addEventListener('click', () => {
+  const text = document.getElementById('code-out').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ copiado!';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = '⎘ copiar código'; btn.classList.remove('ok'); }, 2000);
+  });
+});
+
+// ─────────────────────────────────────────────
+// Helpers
+// ─────────────────────────────────────────────
+function gv(id) { return parseFloat(document.getElementById(id).value); }
+function gs(id) { return document.getElementById(id).value; }
+
+function seR(angle, a, b, p) {
+  if (a === 0 || b === 0) return 0;
+  const c = Math.abs(Math.cos(angle)), s = Math.abs(Math.sin(angle));
+  return 1 / Math.pow(Math.pow(c / a, p) + Math.pow(s / b, p), 1 / p);
+}
+
+function getParams() {
+  return {
+    cx:   gv('cx'),
+    cy:   gv('cy'),
+    ria:  gv('ria'),
+    rib:  gv('rib'),
+    ipw:  gv('ipw') / 10,
+    a0:   gv('a0') * Math.PI / 180,
+    a1:   gv('a1') * Math.PI / 180,
+    nl:   Math.round(gv('nl')),
+    wlat: gv('wlat'),
+    wtop: gv('wtop'),
+    wexp: gv('wexp') / 10,
+    roff: gv('roff'),
+    wIn:  gv('wIn') / 10,
+    wOut: gv('wOut') / 10,
+    inactiveMode: gs('inactiveMode'),
+    capIn:  gs('capIn'),
+    capOut: gs('capOut'),
+    gearX: gv('gearX'), gearY: gv('gearY'),
+    rpmLX: gv('rpmLX'), rpmLY: gv('rpmLY'),
+    rpmVX: gv('rpmVX'), rpmVY: gv('rpmVY'),
+    gLX:   gv('gLX'),   gLY:   gv('gLY'),
+    gVX:   gv('gVX'),   gVY:   gv('gVY'),
+  };
+}
+
+// Pré-calcula as coordenadas de todas as linhas
+function computeLines(p) {
+  const lines = [];
+  const totalSpan = p.a1 - p.a0;
+  for (let i = 0; i < p.nl; i++) {
+    const t = p.nl <= 1 ? 0.5 : i / (p.nl - 1);
+    const angle = p.a0 + t * totalSpan;
+    const cosA = Math.cos(angle);
+    const sinA = Math.sin(angle);
+    const perpX = -sinA;
+    const perpY =  cosA;
+    const rIn  = seR(angle, p.ria, p.rib, p.ipw);
+    const p1x  = p.cx + cosA * rIn;
+    const p1y  = p.cy + sinA * rIn;
+    const upness = Math.max(0, -sinA);
+    const len  = p.wlat + (p.wtop - p.wlat) * Math.pow(upness, p.wexp) + p.roff;
+    const rOut = rIn + len;
+    const p2x  = p.cx + cosA * rOut;
+    const p2y  = p.cy + sinA * rOut;
+    lines.push({ p1x, p1y, p2x, p2y, perpX, perpY });
+  }
+  return lines;
+}
+
+// ─────────────────────────────────────────────
+// Render
+// ─────────────────────────────────────────────
+
+// Linha ativa: trapézio preenchido via scanline do eixo
+function drawFilledTrapezoid(p1x, p1y, p2x, p2y, halfIn, halfOut, perpX, perpY, capIn, capOut) {
+  ctx.fillStyle = '#fff';
+  const ax = p1x + perpX * halfIn,  ay = p1y + perpY * halfIn;
+  const bx = p1x - perpX * halfIn,  by = p1y - perpY * halfIn;
+  const cx2 = p2x - perpX * halfOut, cy2 = p2y - perpY * halfOut;
+  const dx  = p2x + perpX * halfOut, dy  = p2y + perpY * halfOut;
+
+  ctx.beginPath();
+  if (capIn === 'round' && halfIn > 0) {
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(dx, dy);
+    ctx.lineTo(cx2, cy2);
+    ctx.lineTo(bx, by);
+    const ang = Math.atan2(perpY, perpX);
+    ctx.arc(p1x, p1y, halfIn, ang + Math.PI, ang, false);
+  } else {
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(bx, by);
+    ctx.lineTo(cx2, cy2);
+    ctx.lineTo(dx, dy);
+  }
+  ctx.closePath();
+  ctx.fill();
+
+  if (capOut === 'round' && halfOut > 0) {
+    ctx.beginPath();
+    const ang2 = Math.atan2(perpY, perpX);
+    ctx.arc(p2x, p2y, halfOut, ang2 + Math.PI, ang2, true);
+    ctx.closePath();
+    ctx.fill();
+  }
+}
+
+// Linha inativa: só o eixo central, 1px, via Bresenham
+// mode: 'line' = contínua | 'dot2' = 1 a cada 2 | 'dot3' = 1 a cada 3
+function drawAxisLine(p1x, p1y, p2x, p2y, mode) {
+  let x0 = Math.round(p1x), y0 = Math.round(p1y);
+  let x1 = Math.round(p2x), y1 = Math.round(p2y);
+  const dx = Math.abs(x1 - x0), dy = Math.abs(y1 - y0);
+  const sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+  let err = dx - dy, step = 0;
+
+  // Bresenham pixel-a-pixel
+  const imgData = _sharedImgData;
+  while (true) {
+    let draw = false;
+    if      (mode === 'line') draw = true;
+    else if (mode === 'dot2') draw = step % 2 === 0;
+    else if (mode === 'dot3') draw = step % 3 === 0;
+
+    if (draw && x0 >= 0 && y0 >= 0 && x0 < W && y0 < H) {
+      const idx = (y0 * W + x0) * 4;
+      imgData.data[idx]   = 255;
+      imgData.data[idx+1] = 255;
+      imgData.data[idx+2] = 255;
+      imgData.data[idx+3] = 255;
+    }
+    if (x0 === x1 && y0 === y1) break;
+    const e2 = 2 * err;
+    if (e2 > -dy) { err -= dy; x0 += sx; }
+    if (e2 <  dx) { err += dx; y0 += sy; }
+    step++;
+  }
+}
+
+let _sharedImgData = null;
+
+function render() {
+  const p = getParams();
+  const ratio = Math.max(0, Math.min(1, (rpm - RPM_MIN) / (RPM_MAX - RPM_MIN)));
+  const activeLines = Math.round(ratio * p.nl);
+  const lines = computeLines(p);
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  // Desenha trapézios ativos primeiro (canvas 2D normal)
+  lines.forEach((l, i) => {
+    if (i < activeLines) {
+      drawFilledTrapezoid(l.p1x, l.p1y, l.p2x, l.p2y, p.wIn / 2, p.wOut / 2,
+                          l.perpX, l.perpY, p.capIn, p.capOut);
+    }
+  });
+
+  // Pega ImageData para escrever eixos inativos pixel a pixel
+  _sharedImgData = ctx.getImageData(0, 0, W, H);
+  lines.forEach((l, i) => {
+    if (i >= activeLines && p.inactiveMode !== 'none') {
+      drawAxisLine(l.p1x, l.p1y, l.p2x, l.p2y, p.inactiveMode);
+    }
+  });
+  ctx.putImageData(_sharedImgData, 0, 0);
+
+  // Marcha
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 34px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillText(String(gear), p.gearX, p.gearY);
+
+  // RPM label + valor
+  ctx.fillStyle = '#aaa';
+  ctx.font = 'bold 6px monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('RPM', p.rpmLX, p.rpmLY);
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 10px monospace';
+  ctx.fillText(String(rpm), p.rpmVX, p.rpmVY);
+
+  // G label + valor (simulado: +1.2)
+  ctx.fillStyle = '#aaa';
+  ctx.font = 'bold 6px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('G', p.gLX, p.gLY);
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 10px monospace';
+  ctx.fillText('+1.2', p.gVX, p.gVY);
+
+  // Badge info
+  const a0deg = Math.round(gv('a0')), a1deg = Math.round(gv('a1'));
+  document.getElementById('info-badge').textContent =
+    `linhas ativas: ${activeLines} / ${p.nl}  |  pivô: (${Math.round(p.cx)}, ${Math.round(p.cy)})  |  arco: ${a0deg}° → ${a1deg}°  |  inativas: ${p.inactiveMode}`;
+}
+
+// ─────────────────────────────────────────────
+// Geração de código
+// ─────────────────────────────────────────────
+function buildArrays() {
+  const p = getParams();
+  const lines = computeLines(p);
+
+  // Arredonda para inteiros * 4 (coordenadas em subpixel x4 para o U8g2 usar drawLine)
+  const X1 = lines.map(l => Math.round(l.p1x));
+  const Y1 = lines.map(l => Math.round(l.p1y));
+  const X2 = lines.map(l => Math.round(l.p2x));
+  const Y2 = lines.map(l => Math.round(l.p2y));
+
+  // Perpendiculares (para o trapézio em C++ — escalonadas * 100 e depois /100.0)
+  const PX = lines.map(l => Math.round(l.perpX * 100));
+  const PY = lines.map(l => Math.round(l.perpY * 100));
+
+  const nl = p.nl;
+  const fmt = arr => arr.join(', ');
+
+  return `// ═══════════════════════════════════════════════
+// ARRAYS PRÉ-CALCULADOS — gerados pelo RPM Fan Designer
+// Parâmetros: pivô(${Math.round(p.cx)},${Math.round(p.cy)}) | arco ${Math.round(gv('a0'))}°→${Math.round(gv('a1'))}°
+// linhas=${nl} | comprLat=${Math.round(p.wlat)} comprTopo=${Math.round(p.wtop)}
+// espInt=${p.wIn.toFixed(2)} espExt=${p.wOut.toFixed(2)} | inativas=${p.inactiveMode}
+// ═══════════════════════════════════════════════
+
+#define FAN_LINES ${nl}
+#define RPM_MIN   ${RPM_MIN}
+#define RPM_MAX   ${RPM_MAX}
+
+// Ponto interno de cada linha (origem, perto do pivô)
+const int8_t fanX1[FAN_LINES] PROGMEM = {${fmt(X1)}};
+const int8_t fanY1[FAN_LINES] PROGMEM = {${fmt(Y1)}};
+
+// Ponto externo de cada linha (borda do leque)
+const int8_t fanX2[FAN_LINES] PROGMEM = {${fmt(X2)}};
+const int8_t fanY2[FAN_LINES] PROGMEM = {${fmt(Y2)}};
+
+// Vetor perpendicular × 100 (divide por 100.0 no C++)
+const int8_t fanPerpX[FAN_LINES] PROGMEM = {${fmt(PX)}};
+const int8_t fanPerpY[FAN_LINES] PROGMEM = {${fmt(PY)}};
+
+// Meia-espessura interna e externa (em pixels, × 10)
+const uint8_t FAN_W_IN  = ${Math.round(p.wIn  * 10)};  // divide por 10.0 → ${p.wIn.toFixed(2)} px
+const uint8_t FAN_W_OUT = ${Math.round(p.wOut * 10)};  // divide por 10.0 → ${p.wOut.toFixed(2)} px
+`;
+}
+
+function buildFullSketch() {
+  const p = getParams();
+  const nl = p.nl;
+  const mode = p.inactiveMode;
+
+  const inactiveComment = {
+    'none':  'linhas inativas nao sao desenhadas',
+    'line':  'linha inativa: eixo central continuo 1px via drawLine()',
+    'dot2':  'linha inativa: pontilhado 1 px a cada 2 via Bresenham',
+    'dot3':  'linha inativa: pontilhado 1 px a cada 3 via Bresenham',
+  }[mode] || '';
+
+  const inactiveCode = {
+    'none': `      // inativa -- invisivel`,
+    'line': `      // inativa -- eixo central 1px
+      u8g2.drawLine((int)p1x, (int)p1y, (int)p2x, (int)p2y);`,
+    'dot2': `      // inativa -- pontilhado a cada 2px
+      drawDottedLine((int)p1x, (int)p1y, (int)p2x, (int)p2y, 2);`,
+    'dot3': `      // inativa -- pontilhado a cada 3px
+      drawDottedLine((int)p1x, (int)p1y, (int)p2x, (int)p2y, 3);`,
+  }[mode] || '';
+
+  const needsDotted = mode === 'dot2' || mode === 'dot3';
+
+  // Pre-calcula os arrays para embutir no sketch gerado
+  const lines = computeLines(p);
+  const X1 = lines.map(l => Math.round(l.p1x));
+  const Y1 = lines.map(l => Math.round(l.p1y));
+  const X2 = lines.map(l => Math.round(l.p2x));
+  const Y2 = lines.map(l => Math.round(l.p2y));
+  const PX = lines.map(l => Math.round(l.perpX * 100));
+  const PY = lines.map(l => Math.round(l.perpY * 100));
+  const fmt = arr => arr.join(', ');
+
+  return `// =====================================================
+// SKETCH COMPLETO -- VW Gol GL 1990 . RPM + Marcha
+// Display: OLED 2.42" SSD1309 128x64 I2C
+// MCU: Arduino Nano
+//
+// MEMORIA RAM: construtor _1_ (page buffer = 128 bytes de RAM).
+// O construtor _F_ (full buffer) exige 1024 bytes -- o Nano
+// tem 2048 bytes totais e trava silenciosamente com _F_.
+// firstPage()/nextPage() redesenha a tela em paginas de 8px.
+// TODO o codigo de desenho DEVE ficar dentro do do/while.
+//
+// Linhas ativas  --> trapezio preenchido com 2x drawTriangle()
+// drawTriangle() do U8g2 EH preenchido (filled polygon).
+// O trapezio e dividido em 2 triangulos sem lacuna.
+// Linhas inativas --> ${inactiveComment}
+// =====================================================
+
+#include <U8g2lib.h>
+#include <Wire.h>
+#include <Adafruit_MPU6050.h>
+#include <Adafruit_Sensor.h>
+
+// -- Display: construtor _1_ (page buffer, baixo consumo de RAM) --
+U8G2_SSD1309_128X64_NONAME2_1_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
+// Alternativa se nao inicializar: U8G2_SSD1306_128X64_NONAME_1_HW_I2C
+
+// -- Sensor IMU MPU6050 e estado -----------------------
+Adafruit_MPU6050 mpu;
+bool mpuFound = false;
+
+// -- Configuracao --------------------------------------
+#define RPM_MIN   ${RPM_MIN}
+#define RPM_MAX   ${RPM_MAX}
+#define FAN_LINES ${nl}
+
+// -- Arrays PROGMEM (gerados pelo RPM Fan Designer) ----
+// pivo(${Math.round(p.cx)}, ${Math.round(p.cy)}) | arco ${Math.round(gv('a0'))} -> ${Math.round(gv('a1'))} graus
+// comprLat=${Math.round(p.wlat)} comprTopo=${Math.round(p.wtop)} | espIn=${p.wIn.toFixed(2)} espOut=${p.wOut.toFixed(2)}
+const int8_t fanX1[FAN_LINES]    PROGMEM = {${fmt(X1)}};
+const int8_t fanY1[FAN_LINES]    PROGMEM = {${fmt(Y1)}};
+const int8_t fanX2[FAN_LINES]    PROGMEM = {${fmt(X2)}};
+const int8_t fanY2[FAN_LINES]    PROGMEM = {${fmt(Y2)}};
+const int8_t fanPerpX[FAN_LINES] PROGMEM = {${fmt(PX)}};
+const int8_t fanPerpY[FAN_LINES] PROGMEM = {${fmt(PY)}};
+
+// Espessuras x10 (divide por 10.0 no codigo)
+const uint8_t FAN_W_IN  = ${Math.round(p.wIn  * 10)};  // -> ${p.wIn.toFixed(2)} px (lado do pivo)
+const uint8_t FAN_W_OUT = ${Math.round(p.wOut * 10)};  // -> ${p.wOut.toFixed(2)} px (borda do leque)
+
+// -- Posicoes dos elementos de texto (pixels) ----------
+#define GEAR_X      ${Math.round(p.gearX)}   // centro horizontal da marcha
+#define GEAR_Y      ${Math.round(p.gearY)}   // baseline vertical da marcha
+#define RPM_LABEL_X ${Math.round(p.rpmLX)}   // X do label "RPM"
+#define RPM_LABEL_Y ${Math.round(p.rpmLY)}   // Y do label "RPM"
+#define RPM_VAL_X   ${Math.round(p.rpmVX)}   // X direito do valor RPM (alinha pela direita)
+#define RPM_VAL_Y   ${Math.round(p.rpmVY)}   // Y do valor RPM
+#define G_LABEL_X   ${Math.round(p.gLX)}     // X do label "G"
+#define G_LABEL_Y   ${Math.round(p.gLY)}     // Y do label "G"
+#define G_VAL_X     ${Math.round(p.gVX)}     // X do valor G
+#define G_VAL_Y     ${Math.round(p.gVY)}     // Y do valor G
+
+// -- Estado global -------------------------------------
+int  currentRPM  = 0;
+int  targetRPM   = 0;
+char currentGear = 'N'; // Neutro eh mais seguro que '3'
+
+// -- Prototipos (obrigatorio no C++: declara antes de usar) ---
+int  lerRPM();
+char lerMarcha();
+void desenhaLeque(int rpm);
+void desenhaMarcha(char gear);
+void desenhaRPMNumero(int rpm);
+void drawFilledTrapezoid(int16_t ax, int16_t ay,
+                          int16_t bx, int16_t by,
+                          int16_t cx, int16_t cy,
+                          int16_t dx, int16_t dy);
+void atualizaGForce();
+${needsDotted ? 'void drawDottedLine(int x0, int y0, int x1, int y1, int step);' : ''}
+
+// -- Setup ---------------------------------------------
+void setup() {
+  u8g2.begin();
+  u8g2.setContrast(255);
+
+  // Tenta inicializar o MPU6050
+  if (mpu.begin()) {
+    mpuFound = true;
+    mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
+    mpu.setGyroRange(MPU6050_RANGE_250_DEG);
+    mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
+  }
+}
+
+// -- Loop ----------------------------------------------
+void loop() {
+  targetRPM   = lerRPM();
+  currentGear = lerMarcha();
+  // Suavizacao exponencial: ~4 ciclos para atingir o alvo
+  currentRPM += (targetRPM - currentRPM) >> 2;
+
+  atualizaGForce();
+
+  // firstPage/nextPage: redesenha em paginas de 8 linhas.
+  u8g2.firstPage();
+  do {
+    desenhaLeque(currentRPM);
+    desenhaMarcha(currentGear);
+    desenhaRPMNumero(currentRPM);
+  } while (u8g2.nextPage());
+
+  delay(40); // ~25 FPS
+}
+
+// ── Trapézio preenchido via 2× drawTriangle ────
+void drawFilledTrapezoid(int16_t ax, int16_t ay,
+                          int16_t bx, int16_t by,
+                          int16_t cx, int16_t cy,
+                          int16_t dx, int16_t dy) {
+  u8g2.drawTriangle(ax, ay, bx, by, dx, dy); // triângulo 1
+  u8g2.drawTriangle(bx, by, cx, cy, dx, dy); // triângulo 2
+}
+${needsDotted ? `
+// ── Linha pontilhada (linha INATIVA) ──────────
+void drawDottedLine(int x0, int y0, int x1, int y1, int step) {
+  int dx =  abs(x1-x0), sx = x0<x1 ? 1 : -1;
+  int dy = -abs(y1-y0), sy = y0<y1 ? 1 : -1;
+  int err = dx+dy, n = 0;
+  while (true) {
+    if (n % step == 0 && x0>=0 && y0>=0 && x0<128 && y0<64)
+      u8g2.drawPixel(x0, y0);
+    if (x0==x1 && y0==y1) break;
+    int e2 = 2*err;
+    if (e2 >= dy) { err += dy; x0 += sx; }
+    if (e2 <= dx) { err += dx; y0 += sy; }
+    n++;
+  }
+}` : ''}
+
+// ── Leque de RPM ──────────────────────────────
+void desenhaLeque(int rpm) {
+  int linhasAtivas = map(constrain(rpm, RPM_MIN, RPM_MAX),
+                         RPM_MIN, RPM_MAX, 0, FAN_LINES);
+  float wIn  = FAN_W_IN  / 10.0f;   // meia-largura interna em px
+  float wOut = FAN_W_OUT / 10.0f;   // meia-largura externa em px
+
+  for (int i = 0; i < FAN_LINES; i++) {
+    float p1x = (int8_t)pgm_read_byte(&fanX1[i]);
+    float p1y = (int8_t)pgm_read_byte(&fanY1[i]);
+    float p2x = (int8_t)pgm_read_byte(&fanX2[i]);
+    float p2y = (int8_t)pgm_read_byte(&fanY2[i]);
+    float px  = (int8_t)pgm_read_byte(&fanPerpX[i]) / 100.0f;
+    float py  = (int8_t)pgm_read_byte(&fanPerpY[i]) / 100.0f;
+
+    if (i < linhasAtivas) {
+      int16_t ax = (int16_t)(p1x + px * wIn);
+      int16_t ay = (int16_t)(p1y + py * wIn);
+      int16_t bx = (int16_t)(p1x - px * wIn);
+      int16_t by = (int16_t)(p1y - py * wIn);
+      int16_t cx = (int16_t)(p2x - px * wOut);
+      int16_t cy = (int16_t)(p2y - py * wOut);
+      int16_t dx = (int16_t)(p2x + px * wOut);
+      int16_t dy = (int16_t)(p2y + py * wOut);
+      drawFilledTrapezoid(ax, ay, bx, by, cx, cy, dx, dy);
+    } else {
+${inactiveCode}
+    }
+  }
+}
+
+// ── Número da marcha ──────────────────────────
+void desenhaMarcha(char gear) {
+  char buf[2] = {gear, 0};
+  if (gear >= '1' && gear <= '5')
+    u8g2.setFont(u8g2_font_logisoso32_tn);
+  else
+    u8g2.setFont(u8g2_font_logisoso24_tr);
+  int fw = u8g2.getStrWidth(buf);
+  u8g2.setCursor(GEAR_X - (fw / 2), GEAR_Y);
+  u8g2.print(gear);
+}
+
+// -- RPM e Forca G ------------------------------------
+// Relacoes de transmissao do AP 1.6 (caixa 5-vel) x diferencial 4.27
+// RPM_TO_KMH[i] = (60 * WHEEL_CIRC * 0.001) / (GEAR_RATIO[i] * FINAL_RATIO)
+static const float RPM_TO_KMH[6] PROGMEM = {
+  0.0f,       // [0] neutro/invalido
+  0.01174f,   // [1] 1a  ratio 3.455
+  0.02083f,   // [2] 2a  ratio 1.944
+  0.03096f,   // [3] 3a  ratio 1.308
+  0.04255f,   // [4] 4a  ratio 0.952
+  0.05319f,   // [5] 5a  ratio 0.762
+};
+
+static int           _lastRPM     = 0;
+static char          _lastGear    = 'N';
+static float         _gForce      = 0.0f;
+static unsigned long _lastMillis = 0;
+
+void atualizaGForce() {
+  if (mpuFound) {
+    sensors_event_t a, g_event, temp;
+    mpu.getEvent(&a, &g_event, &temp);
+    // Aceleração no eixo Y (longitudinal), converte m/s^2 para G (divide por 9.80665)
+    float g = a.acceleration.y / 9.80665f;
+    _gForce = _gForce * 0.8f + g * 0.2f;
+  } else {
+    // Fallback: calcula a aceleração simulada com base na variação de RPM e marcha
+    unsigned long now = millis();
+    float dt = (now - _lastMillis) / 1000.0f;
+    if (dt < 0.01f) return;
+
+    int gearIdx = (currentGear >= '1' && currentGear <= '5') ? (currentGear - '0') : 0;
+    float ratio = (gearIdx > 0) ? pgm_read_float(&RPM_TO_KMH[gearIdx]) : 0.0f;
+
+    float kmhNow  = currentRPM   * ratio;
+    float kmhLast = _lastRPM     * ratio;
+    float accelMs2 = ((kmhNow - kmhLast) / 3.6f) / dt; // m/s^2
+    float g = accelMs2 / 9.80665f;
+
+    _gForce = _gForce * 0.6f + g * 0.4f;
+
+    _lastRPM    = currentRPM;
+    _lastGear   = currentGear;
+    _lastMillis = now;
+  }
+}
+
+void desenhaRPMNumero(int rpm) {
+  char buf[8];
+
+  // -- Lado direito: label "RPM" + valor numerico --
+  u8g2.setFont(u8g2_font_micro_tr);
+  u8g2.setCursor(RPM_LABEL_X, RPM_LABEL_Y);
+  u8g2.print("RPM");
+
+  sprintf(buf, "%d", rpm);
+  u8g2.setFont(u8g2_font_6x10_mf);
+  u8g2.setCursor(RPM_VAL_X - u8g2.getStrWidth(buf), RPM_VAL_Y);
+  u8g2.print(buf);
+
+  // -- Lado esquerdo: label "G" + valor da forca G --
+  u8g2.setFont(u8g2_font_micro_tr);
+  u8g2.setCursor(G_LABEL_X, G_LABEL_Y);
+  u8g2.print("G");
+
+  // Formata com sinal e 1 casa decimal: "+1.3" / "-0.8"
+  char sign = (_gForce >= 0) ? '+' : '-';
+  float absG = (_gForce >= 0) ? _gForce : -_gForce;
+  int intPart  = (int)absG;
+  int fracPart = (int)((absG - intPart) * 10);
+  sprintf(buf, "%c%d.%d", sign, intPart, fracPart);
+
+  u8g2.setFont(u8g2_font_6x10_mf);
+  u8g2.setCursor(G_VAL_X, G_VAL_Y);
+  u8g2.print(buf);
+}
+
+// ── Leitura RPM ───────────────────────────────
+int lerRPM() {
+  return map(analogRead(A6), 0, 1023, RPM_MIN, RPM_MAX);
+}
+
+// ── Leitura marcha (4 Sensores Hall AH3503 em quadrado) ──
+char lerMarcha() {
+  int hall_0_value = analogRead(A0); // Superior Esquerdo
+  int hall_1_value = analogRead(A1); // Inferior Esquerdo
+  int hall_2_value = analogRead(A2); // Inferior Direito
+  int hall_3_value = analogRead(A3); // Superior Direito
+
+  // Converte desvio em relação ao centro (512) para porcentagem (0-100)
+  int pct0 = (abs(hall_0_value - 512) * 100) / 512;
+  int pct1 = (abs(hall_1_value - 512) * 100) / 512;
+  int pct2 = (abs(hall_2_value - 512) * 100) / 512;
+  int pct3 = (abs(hall_3_value - 512) * 100) / 512;
+
+  if (pct0 > 30 && pct3 > 30) {
+    return '3'; // 3ª Marcha
+  }
+  else if (pct1 > 30 && pct2 > 30) {
+    return '4'; // 4ª Marcha
+  }
+  else if (pct0 > 30) {
+    return '1'; // 1ª Marcha
+  }
+  else if (pct3 > 30) {
+    return '5'; // 5ª Marcha
+  }
+  else if (pct1 > 30) {
+    return '2'; // 2ª Marcha
+  }
+  else if (pct2 > 30) {
+    return 'R'; // Marcha Ré
+  }
+  else {
+    return 'N'; // Neutro
+  }
+}
+`;
+}
+
+function buildPython() {
+  const p = getParams();
+  return `#!/usr/bin/env python3
+# ═══════════════════════════════════════════════
+# RPM Fan Array Generator
+# Regenera os arrays PROGMEM com os parâmetros abaixo
+# ═══════════════════════════════════════════════
+import math
+
+# ── Parâmetros (sincronize com o designer) ────
+CX      = ${p.cx.toFixed(2)}
+CY      = ${p.cy.toFixed(2)}
+RIA     = ${p.ria}        # raio interno horizontal
+RIB     = ${p.rib}        # raio interno vertical
+IPW     = ${p.ipw.toFixed(2)}      # oval power interno
+A0_DEG  = ${Math.round(gv('a0'))}       # ângulo inicial °
+A1_DEG  = ${Math.round(gv('a1'))}       # ângulo final °
+NL      = ${p.nl}         # número de linhas
+W_LAT   = ${p.wlat}       # comprimento lateral
+W_TOP   = ${p.wtop}       # comprimento topo
+W_EXP   = ${p.wexp.toFixed(2)}      # curva de comprimento
+R_OFF   = ${p.roff}       # offset comprimento
+W_IN    = ${p.wIn.toFixed(2)}       # meia-espessura interna
+W_OUT   = ${p.wOut.toFixed(2)}      # meia-espessura externa
+
+A0 = math.radians(A0_DEG)
+A1 = math.radians(A1_DEG)
+
+def se_r(angle, a, b, p):
+    if a == 0 or b == 0: return 0
+    c = abs(math.cos(angle))
+    s = abs(math.sin(angle))
+    return 1 / ((c/a)**p + (s/b)**p) ** (1/p)
+
+lines = []
+for i in range(NL):
+    t = i / (NL - 1) if NL > 1 else 0.5
+    angle = A0 + t * (A1 - A0)
+    cosA = math.cos(angle)
+    sinA = math.sin(angle)
+    perpX = -sinA
+    perpY =  cosA
+    rIn  = se_r(angle, RIA, RIB, IPW)
+    p1x  = CX + cosA * rIn
+    p1y  = CY + sinA * rIn
+    upness = max(0, -sinA)
+    length = W_LAT + (W_TOP - W_LAT) * (upness ** W_EXP) + R_OFF
+    rOut = rIn + length
+    p2x  = CX + cosA * rOut
+    p2y  = CY + sinA * rOut
+    lines.append((
+        round(p1x), round(p1y),
+        round(p2x), round(p2y),
+        round(perpX * 100), round(perpY * 100)
+    ))
+
+def arr(name, idx, typ="int8_t"):
+    vals = ", ".join(str(l[idx]) for l in lines)
+    return f"const {typ} {name}[{NL}] PROGMEM = {{{vals}}};"
+
+print(f"#define FAN_LINES {NL}")
+print(arr("fanX1",    0))
+print(arr("fanY1",    1))
+print(arr("fanX2",    2))
+print(arr("fanY2",    3))
+print(arr("fanPerpX", 4))
+print(arr("fanPerpY", 5))
+print(f"const uint8_t FAN_W_IN  = {round(W_IN  * 10)};")
+print(f"const uint8_t FAN_W_OUT = {round(W_OUT * 10)};")
+print("\\nArrays gerados com sucesso!")
+`;
+}
+
+function updateCode() {
+  const out = document.getElementById('code-out');
+  if (activeTab === 'arrays')  out.textContent = buildArrays();
+  if (activeTab === 'full')    out.textContent = buildFullSketch();
+  if (activeTab === 'python')  out.textContent = buildPython();
+}
+
+// ── Init ──
+render();
+updateCode();
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-nano", "id": "nano2", "top": 504, "left": 287.5, "attrs": {} },
+    {
+      "type": "board-ssd1306",
+      "id": "oled2",
+      "top": 435.14,
+      "left": 489.83,
+      "attrs": { "i2cAddress": "0x3c" }
+    },
+    { "type": "wokwi-mpu6050", "id": "imu1", "top": 634, "left": 487.5, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot5", "top": 364, "left": 57.5, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot6", "top": 464, "left": 57.5, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot7", "top": 564, "left": 57.5, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot8", "top": 664, "left": 57.5, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot9", "top": 764, "left": 57.5, "attrs": {} }
+  ],
+  "connections": [
+    [ "nano2:5V", "oled2:VCC", "red", [ "v48", "h57.6", "v-192", "h67.05" ] ],
+    [ "nano2:5V", "imu1:VCC", "red", [ "v48", "h149.1" ] ],
+    [ "nano2:5V", "pot5:VCC", "red", [ "v28.8", "h-259.2", "v-153.6", "h-47.1" ] ],
+    [ "nano2:5V", "pot6:VCC", "red", [ "v28.8", "h-268.8", "v-38.4", "h-37.5" ] ],
+    [ "nano2:5V", "pot7:VCC", "red", [ "v86.4", "h-306.3" ] ],
+    [ "nano2:5V", "pot8:VCC", "red", [ "v182.4", "h-306.3" ] ],
+    [ "nano2:5V", "pot9:VCC", "red", [ "v28.8", "h-240", "v259.2", "h-66.3" ] ],
+    [ "nano2:GND.1", "oled2:GND", "black", [ "v19.2", "h48", "v-153.6", "h48" ] ],
+    [ "nano2:GND.1", "imu1:GND", "black", [ "v9.6", "h120.3" ] ],
+    [ "nano2:GND.1", "pot5:GND", "black", [ "v19.2", "h-288", "v-124.8", "h-57.5" ] ],
+    [ "nano2:GND.1", "pot6:GND", "black", [ "v19.2", "h-288", "v-48", "h-57.5" ] ],
+    [ "nano2:GND.1", "pot7:GND", "black", [ "v96", "h-345.5" ] ],
+    [ "nano2:GND.1", "pot8:GND", "black", [ "v192", "h-345.5" ] ],
+    [ "nano2:GND.1", "pot9:GND", "black", [ "v307.2", "h-345.5" ] ],
+    [ "nano2:A4", "oled2:SDA", "green", [ "v28.8", "h230.4", "v-172.8", "h-48.07" ] ],
+    [ "nano2:A5", "oled2:SCL", "yellow", [ "v38.4", "h76.8", "v-192", "h86.1" ] ],
+    [ "oled2:SDA", "imu1:SDA", "green", [ "v-27.66", "h60", "v226.98" ] ],
+    [ "oled2:SCL", "imu1:SCL", "yellow", [ "v-37.26", "h98.63", "v220.8", "h-100.5" ] ],
+    [ "pot5:SIG", "nano2:A0", "orange", [ "v18.7", "h66.7", "v124.8", "h172.8" ] ],
+    [ "pot6:SIG", "nano2:A1", "orange", [ "v14.7", "h37.9", "v28.8", "h211.2" ] ],
+    [ "pot7:SIG", "nano2:A2", "orange", [ "v10.7", "h258.7" ] ],
+    [ "pot8:SIG", "nano2:A3", "orange", [ "v6.7", "h268.3" ] ],
+    [ "pot9:SIG", "nano2:A6", "orange", [ "v31.5", "h297.1" ] ]
+  ],
+  "dependencies": {}
+}
