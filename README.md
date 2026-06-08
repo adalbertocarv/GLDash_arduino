@@ -85,7 +85,7 @@ O código (escrito em C++) foi otimizado para lidar com as limitações de proce
 <img width="1440" height="1056" alt="image" src="https://github.com/user-attachments/assets/af9cfb91-f018-4c30-a5c5-f0d7781fb192" />
 <img width="1440" height="1014" alt="image" src="https://github.com/user-attachments/assets/fc18669d-74e1-42b3-91e9-6a2f1beda449" />
 <img width="1440" height="970" alt="image" src="https://github.com/user-attachments/assets/c44aa0c2-1fbe-44c5-9118-01a44a94a229" />
-
+<img width="1571" height="771" alt="image" src="https://github.com/user-attachments/assets/e664da96-524b-42a3-96dc-d324314e0bac" />
 
 
 
