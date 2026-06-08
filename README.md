@@ -79,3 +79,13 @@ O código (escrito em C++) foi otimizado para lidar com as limitações de proce
 2. **Blindagem Eletromagnética:** Utilização de Cabo Manga Blindado (6x22 AWG) para a conexão entre a PCB do câmbio e a Central Elétrica. A malha de aço externa é aterrada apenas na ponta da Central, atuando como Gaiola de Faraday contra os ruídos dos cabos de vela.
 3. **Proteção Química:** Aplicação de verniz conformal (ou isolante similar) na camada inferior da Placa-Mãe de fenolite para prevenir oxidação das soldas devido a variações térmicas e umidade automotiva.
 4. **Conectividade Modular:** Uso extensivo de bornes de parafuso (KRE) e soquetes (barra de pinos fêmea) para garantir que componentes vitais (como o próprio Arduino) possam ser rapidamente removidos, diagnosticados ou substituídos sem a necessidade de retrabalho com ferro de solda no interior do veículo.
+
+<img width="1440" height="1304" alt="image" src="https://github.com/user-attachments/assets/ff32b3a3-d9d9-4931-843e-d1ae6be956b9" />
+<img width="1440" height="1224" alt="image" src="https://github.com/user-attachments/assets/25187bb7-59ef-4fb3-a8b4-0915e5e8b001" />
+<img width="1440" height="1056" alt="image" src="https://github.com/user-attachments/assets/af9cfb91-f018-4c30-a5c5-f0d7781fb192" />
+<img width="1440" height="1014" alt="image" src="https://github.com/user-attachments/assets/fc18669d-74e1-42b3-91e9-6a2f1beda449" />
+<img width="1440" height="970" alt="image" src="https://github.com/user-attachments/assets/c44aa0c2-1fbe-44c5-9118-01a44a94a229" />
+
+
+
+
