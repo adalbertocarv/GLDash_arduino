@@ -1,0 +1,669 @@
+
+<style>
+h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.wrap{padding:1rem 0}
+.tabs{display:flex;gap:2px;margin-bottom:14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.tab{padding:7px 14px;font-size:13px;color:var(--color-text-secondary);cursor:pointer;border-bottom:2px solid transparent;user-select:none}
+.tab.on{color:var(--color-text-info);border-bottom-color:var(--color-text-info)}
+.panel{display:none}.panel.on{display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.leg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary)}
+.leg-line{width:24px;height:3px;border-radius:2px;flex-shrink:0}
+.tip{font-size:12px;color:var(--color-text-secondary);margin-top:8px;line-height:1.5}
+</style>
+<h2 class="sr-only">Esquema visual de montagem do hardware GL-Dash: três módulos (Central Elétrica, Cockpit e PCB Hall) conectados por cabos KRE</h2>
+<div class="wrap">
+<div class="tabs">
+  <div class="tab on" onclick="show('overview')">Visão geral</div>
+  <div class="tab" onclick="show('central')">① Central</div>
+  <div class="tab" onclick="show('cockpit')">② Cockpit</div>
+  <div class="tab" onclick="show('hall')">③ Hall / câmbio</div>
+  <div class="tab" onclick="show('opto')">Circuito RPM</div>
+</div>
+
+<!-- ══ VISÃO GERAL ══ -->
+<div class="panel on" id="tab-overview">
+<div class="legend">
+  <div class="leg"><div class="leg-line" style="background:#DC2626"></div>+5V / 12V</div>
+  <div class="leg"><div class="leg-line" style="background:#374151"></div>GND</div>
+  <div class="leg"><div class="leg-line" style="background:#16a34a;height:2px;border-top:2px dashed #16a34a"></div>SDA / Hall sinal</div>
+  <div class="leg"><div class="leg-line" style="background:#d97706;height:2px;border-top:2px dashed #d97706"></div>SCL</div>
+  <div class="leg"><div class="leg-line" style="background:#7C3AED;height:2px;border-top:2px dashed #7C3AED"></div>RPM (isolado)</div>
+</div>
+<svg width="100%" viewBox="0 0 680 520" role="img">
+<title>Visão geral do hardware GL-Dash</title>
+<desc>Três módulos: Central Elétrica com Arduino Nano, Cockpit com OLED e MPU-6050, e PCB Hall no câmbio, conectados por cabos KRE</desc>
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- ── CARRO / FONTES ── -->
+<!-- Bateria/chave -->
+<rect x="20" y="60" width="100" height="50" rx="8" fill="none" stroke="var(--color-border-secondary)" stroke-width="1"/>
+<text class="th" x="70" y="81" text-anchor="middle" font-family="var(--font-sans)" font-size="13" fill="var(--color-text-primary)" font-weight="500">Carro</text>
+<text class="ts" x="70" y="97" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="var(--color-text-secondary)">12V pós-chave</text>
+<!-- Bobina -->
+<rect x="20" y="160" width="100" height="50" rx="8" fill="none" stroke="#7C3AED" stroke-width="1"/>
+<text class="th" x="70" y="181" text-anchor="middle" font-family="var(--font-sans)" font-size="13" fill="var(--color-text-primary)" font-weight="500">Bobina</text>
+<text class="ts" x="70" y="197" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="#7C3AED">sinal ignição</text>
+
+<!-- ── CENTRAL ── -->
+<rect x="180" y="30" width="200" height="280" rx="12" fill="none" stroke="#D4521A" stroke-width="1.5" stroke-dasharray="5,3"/>
+<text x="280" y="20" text-anchor="middle" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="#D4521A">① CENTRAL ELÉTRICA</text>
+
+<!-- Fusível -->
+<rect x="196" y="48" width="60" height="26" rx="5" fill="#D97706" fill-opacity=".12" stroke="#D97706" stroke-width="1"/>
+<text x="226" y="65" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="#D97706" font-weight="500">Fusível 2A</text>
+
+<!-- LM2596 -->
+<rect x="196" y="88" width="80" height="44" rx="6" fill="#D4521A" fill-opacity=".12" stroke="#D4521A" stroke-width="1"/>
+<text x="236" y="107" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="#D4521A" font-weight="500">LM2596</text>
+<text x="236" y="122" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#D4521A">12V → 5V</text>
+
+<!-- PC817 box -->
+<rect x="196" y="150" width="80" height="44" rx="6" fill="#7C3AED" fill-opacity=".12" stroke="#7C3AED" stroke-width="1"/>
+<text x="236" y="169" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="#7C3AED" font-weight="500">PC817</text>
+<text x="236" y="183" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#7C3AED">isolamento galvânico</text>
+
+<!-- Arduino Nano -->
+<rect x="196" y="214" width="80" height="80" rx="8" fill="#1F6FEB" fill-opacity=".12" stroke="#1F6FEB" stroke-width="1.5"/>
+<text x="236" y="250" text-anchor="middle" font-family="var(--font-sans)" font-size="12" fill="#1F6FEB" font-weight="500">Arduino</text>
+<text x="236" y="265" text-anchor="middle" font-family="var(--font-sans)" font-size="12" fill="#1F6FEB" font-weight="500">Nano</text>
+<text x="236" y="282" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#1F6FEB">ATmega328P</text>
+
+<!-- KRE labels na central -->
+<text x="284" y="250" font-family="var(--font-sans)" font-size="9" fill="#059669" font-weight="500">KRE3</text>
+<text x="284" y="262" font-family="var(--font-sans)" font-size="8" fill="var(--color-text-secondary)">câmbio →</text>
+<text x="284" y="278" font-family="var(--font-sans)" font-size="9" fill="#059669" font-weight="500">KRE4</text>
+<text x="284" y="290" font-family="var(--font-sans)" font-size="8" fill="var(--color-text-secondary)">cockpit →</text>
+
+<!-- ── COCKPIT ── -->
+<rect x="450" y="30" width="170" height="160" rx="12" fill="none" stroke="#1F6FEB" stroke-width="1.5" stroke-dasharray="5,3"/>
+<text x="535" y="20" text-anchor="middle" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="#1F6FEB">② COCKPIT</text>
+
+<rect x="466" y="46" width="136" height="52" rx="6" fill="#1F6FEB" fill-opacity=".12" stroke="#1F6FEB" stroke-width="1"/>
+<text x="534" y="68" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="#1F6FEB" font-weight="500">OLED 2.42"</text>
+<text x="534" y="84" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#1F6FEB">SSD1309 · I2C 0x3C</text>
+<text x="534" y="96" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="var(--color-text-secondary)">Pod 3D na coluna</text>
+
+<rect x="466" y="112" width="136" height="60" rx="6" fill="#1F6FEB" fill-opacity=".08" stroke="#1F6FEB" stroke-width="1"/>
+<text x="534" y="136" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="#1F6FEB" font-weight="500">MPU-6050</text>
+<text x="534" y="152" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#1F6FEB">Acelerômetro · 0x68</text>
+<text x="534" y="164" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="#DC2626">AD0 → GND!</text>
+
+<!-- ── PCB HALL ── -->
+<rect x="450" y="230" width="170" height="160" rx="12" fill="none" stroke="#059669" stroke-width="1.5" stroke-dasharray="5,3"/>
+<text x="535" y="220" text-anchor="middle" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="#059669">③ PCB HALL (câmbio)</text>
+
+<!-- 4 sensores em grade 2x2 -->
+<rect x="466" y="246" width="60" height="44" rx="5" fill="#059669" fill-opacity=".15" stroke="#059669" stroke-width="1"/>
+<text x="496" y="264" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#059669" font-weight="500">AH3503</text>
+<text x="496" y="278" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="#059669">HALL0 · 1ª</text>
+
+<rect x="554" y="246" width="60" height="44" rx="5" fill="#059669" fill-opacity=".15" stroke="#059669" stroke-width="1"/>
+<text x="584" y="264" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#059669" font-weight="500">AH3503</text>
+<text x="584" y="278" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="#059669">HALL1 · 2ª</text>
+
+<rect x="466" y="306" width="60" height="44" rx="5" fill="#059669" fill-opacity=".15" stroke="#059669" stroke-width="1"/>
+<text x="496" y="324" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#059669" font-weight="500">AH3503</text>
+<text x="496" y="338" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="#059669">HALL3 · 5ª</text>
+
+<rect x="554" y="306" width="60" height="44" rx="5" fill="#059669" fill-opacity=".15" stroke="#059669" stroke-width="1"/>
+<text x="584" y="324" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#059669" font-weight="500">AH3503</text>
+<text x="584" y="338" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="#059669">HALL2 · Ré</text>
+
+<!-- ímãs indicação -->
+<text x="535" y="393" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" font-style="italic">← ímãs N35 na haste →</text>
+
+<!-- ── CABOS / CONEXÕES ── -->
+<!-- 12V Carro → Fusível → LM2596 -->
+<path d="M120 85 L190 85" fill="none" stroke="#DC2626" stroke-width="2" marker-end="url(#arr)"/>
+<text x="155" y="79" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="#DC2626" font-weight="500">KRE1 12V</text>
+<!-- GND -->
+<path d="M120 95 L190 100" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="155" y="108" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="var(--color-text-secondary)">GND</text>
+
+<!-- Bobina → PC817 -->
+<path d="M120 185 L190 172" fill="none" stroke="#7C3AED" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr)"/>
+<text x="155" y="182" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="#7C3AED" font-weight="500">KRE2 isolado</text>
+
+<!-- Central → Cockpit KRE4 -->
+<path d="M380 100 L444 100" fill="none" stroke="#DC2626" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M380 110 L444 110" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+<path d="M380 120 L444 120" fill="none" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+<path d="M380 130 L444 130" fill="none" stroke="#d97706" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+<rect x="378" y="88" width="6" height="54" rx="2" fill="#059669"/>
+<text x="408" y="78" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#059669" font-weight="500">KRE4</text>
+<text x="408" y="88" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="var(--color-text-secondary)">5V GND SDA SCL</text>
+
+<!-- Central → PCB Hall KRE3 -->
+<path d="M380 265 L444 310" fill="none" stroke="#DC2626" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M380 275 L444 320" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+<path d="M380 285 L444 330" fill="none" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+<path d="M380 295 L444 340" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+<path d="M380 305 L444 350" fill="none" stroke="#d97706" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+<path d="M380 315 L444 360" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+<rect x="378" y="253" width="6" height="74" rx="2" fill="#059669"/>
+<text x="408" y="244" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#059669" font-weight="500">KRE3 · blindado</text>
+<text x="408" y="254" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="var(--color-text-secondary)">6 fios + malha</text>
+
+<!-- D2 → PC817 interno -->
+<path d="M236 214 L236 196" fill="none" stroke="#7C3AED" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+<text x="248" y="208" font-family="var(--font-sans)" font-size="8" fill="#7C3AED">D2</text>
+
+<!-- LM2596 → Nano -->
+<path d="M236 132 L236 212" fill="none" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr)"/>
+<text x="245" y="175" font-family="var(--font-sans)" font-size="8" fill="#DC2626">5V</text>
+
+<!-- nota blindagem -->
+<text x="340" y="430" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="var(--color-text-secondary)">⚠ Malha do KRE3 aterrada apenas na Central</text>
+
+<!-- nota AD0 -->
+<rect x="450" y="420" width="170" height="22" rx="4" fill="#DC2626" fill-opacity=".08" stroke="#DC2626" stroke-width="0.5"/>
+<text x="535" y="434" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#DC2626">AD0 do MPU-6050 → GND (obrigatório)</text>
+</svg>
+<div class="tip">Clique nas abas para ver o detalhe de cada módulo.</div>
+</div>
+
+<!-- ══ CENTRAL ══ -->
+<div class="panel" id="tab-central">
+<svg width="100%" viewBox="0 0 680 500" role="img">
+<title>Detalhe da Central Elétrica — componentes e conexões internas</title>
+<desc>Layout interno da Central: LM2596, filtros, PC817 com resistores de proteção, Arduino Nano e conectores KRE</desc>
+<defs>
+  <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- trilha 5V -->
+<line x1="40" y1="48" x2="640" y2="48" stroke="#DC2626" stroke-width="2" stroke-dasharray="6,4"/>
+<text x="20" y="52" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="#DC2626">5V</text>
+<!-- trilha GND -->
+<line x1="40" y1="478" x2="640" y2="478" stroke="#374151" stroke-width="2" stroke-dasharray="6,4"/>
+<text x="14" y="482" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="var(--color-text-secondary)">GND</text>
+
+<!-- ── ZONA ENERGIA ── -->
+<rect x="40" y="66" width="240" height="200" rx="10" fill="#D4521A" fill-opacity=".05" stroke="#D4521A" stroke-width="0.5" stroke-dasharray="4,3"/>
+<text x="52" y="80" font-family="var(--font-sans)" font-size="9" font-weight="500" fill="#D4521A">ZONA ENERGIA</text>
+
+<!-- KRE1 -->
+<rect x="52" y="86" width="70" height="36" rx="6" fill="#059669" fill-opacity=".9" stroke="#059669" stroke-width="1"/>
+<text x="87" y="101" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="white" font-weight="500">KRE1</text>
+<text x="87" y="114" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.8)">+12V · GND</text>
+
+<!-- 1N5408 -->
+<rect x="138" y="90" width="56" height="28" rx="5" fill="#7C3AED" fill-opacity=".9"/>
+<text x="166" y="103" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="white" font-weight="500">1N5408</text>
+<text x="166" y="114" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">anti-inversão</text>
+<!-- seta faixa -->
+<text x="194" y="106" font-family="var(--font-sans)" font-size="10" fill="white">▶</text>
+
+<!-- Fusível -->
+<rect x="52" y="136" width="70" height="28" rx="5" fill="#D97706" fill-opacity=".9"/>
+<text x="87" y="148" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="white" font-weight="500">Fusível 2A</text>
+<text x="87" y="159" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">linha 15</text>
+
+<!-- LM2596 -->
+<rect x="138" y="128" width="80" height="52" rx="7" fill="#D4521A" fill-opacity=".9"/>
+<text x="178" y="150" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="white" font-weight="500">LM2596</text>
+<text x="178" y="163" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.8)">Ajustar: 5.00V</text>
+<text x="178" y="174" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.7)">12V → 5V</text>
+
+<!-- 470µF -->
+<rect x="52" y="180" width="50" height="66" rx="5" fill="#B45309" fill-opacity=".9"/>
+<text x="77" y="207" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="white" font-weight="500">470µF</text>
+<text x="77" y="220" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">25V</text>
+<text x="77" y="234" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.7)">filtro ent.</text>
+<!-- + - -->
+<text x="57" y="191" font-family="var(--font-sans)" font-size="10" fill="white">+</text>
+<text x="57" y="243" font-family="var(--font-sans)" font-size="10" fill="white">−</text>
+
+<!-- 100nF -->
+<rect x="112" y="192" width="46" height="46" rx="5" fill="#B45309" fill-opacity=".9"/>
+<text x="135" y="212" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">100nF</text>
+<text x="135" y="226" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">filtro saída</text>
+
+<!-- saída 5V → trilha -->
+<line x1="218" y1="154" x2="218" y2="48" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+<circle cx="218" cy="48" r="4" fill="#DC2626"/>
+
+<!-- ── ZONA PC817 ── -->
+<rect x="40" y="280" width="270" height="184" rx="10" fill="#7C3AED" fill-opacity=".04" stroke="#7C3AED" stroke-width="0.5" stroke-dasharray="4,3"/>
+<text x="52" y="295" font-family="var(--font-sans)" font-size="9" font-weight="500" fill="#7C3AED">ZONA PC817 — LADO SUJO | LIMPO</text>
+<!-- separador sujo/limpo -->
+<line x1="200" y1="296" x2="200" y2="458" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="4,3"/>
+<text x="120" y="455" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="var(--color-text-secondary)">⚡ SUJO (bobina)</text>
+<text x="270" y="455" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="var(--color-text-secondary)">🔒 LIMPO (Arduino)</text>
+
+<!-- KRE2 -->
+<rect x="52" y="300" width="66" height="34" rx="5" fill="#059669" fill-opacity=".9"/>
+<text x="85" y="315" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="white" font-weight="500">KRE2</text>
+<text x="85" y="326" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">Bobina sinal</text>
+
+<!-- TVS P6KE15A -->
+<rect x="52" y="348" width="66" height="28" rx="5" fill="#6D28D9" fill-opacity=".9"/>
+<text x="85" y="362" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">TVS P6KE15A</text>
+<text x="85" y="373" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">paralelo KRE2</text>
+
+<!-- R1 10k 2W -->
+<rect x="52" y="388" width="66" height="26" rx="5" fill="#7C3AED" fill-opacity=".85"/>
+<text x="85" y="402" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">R1 · 10kΩ 2W</text>
+<text x="85" y="412" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">limita corrente</text>
+
+<!-- R2 1k -->
+<rect x="130" y="388" width="54" height="26" rx="5" fill="#7C3AED" fill-opacity=".85"/>
+<text x="157" y="402" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">R2 · 1kΩ</text>
+<text x="157" y="412" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">protege LED</text>
+
+<!-- 1N4007 -->
+<rect x="130" y="340" width="54" height="28" rx="5" fill="#7C3AED" fill-opacity=".85"/>
+<text x="157" y="355" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">1N4007</text>
+<text x="157" y="366" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">anti-reverso →</text>
+<text x="182" y="358" font-family="var(--font-sans)" font-size="10" fill="white">▶</text>
+
+<!-- PC817 DIP -->
+<rect x="210" y="308" width="80" height="90" rx="8" fill="#7C3AED" fill-opacity=".9"/>
+<text x="250" y="340" text-anchor="middle" font-family="var(--font-sans)" font-size="12" fill="white" font-weight="500">PC817</text>
+<text x="250" y="355" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="rgba(255,255,255,.8)">DIP-4</text>
+<!-- pinos -->
+<text x="214" y="320" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.8)">1 ○</text>
+<text x="214" y="336" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.8)">2 ○</text>
+<text x="274" y="320" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.8)">○ 4</text>
+<text x="274" y="336" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.8)">○ 3</text>
+
+<!-- R3 pull-up -->
+<rect x="210" y="412" width="80" height="28" rx="5" fill="#DC2626" fill-opacity=".9"/>
+<text x="250" y="425" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">R3 · 10kΩ pull-up</text>
+<text x="250" y="436" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.9)">pino 4 → 5V ← CRÍTICO</text>
+
+<!-- pull-up → 5V -->
+<line x1="250" y1="412" x2="250" y2="48" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+<circle cx="250" cy="48" r="4" fill="#DC2626"/>
+
+<!-- D2 label -->
+<line x1="292" y1="330" x2="340" y2="330" stroke="#7C3AED" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+<text x="318" y="324" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#7C3AED" font-weight="500">→ D2</text>
+
+<!-- GND sujo (separado) -->
+<line x1="85" y1="334" x2="85" y2="390" stroke="#7f1d1d" stroke-width="1" stroke-dasharray="3,2"/>
+<text x="52" y="445" font-family="var(--font-sans)" font-size="8" fill="#7f1d1d">GND sujo (câmbio)</text>
+<text x="52" y="457" font-family="var(--font-sans)" font-size="7" fill="var(--color-text-secondary)">≠ GND Arduino!</text>
+
+<!-- ── ARDUINO NANO ── -->
+<rect x="360" y="66" width="240" height="398" rx="10" fill="#1F6FEB" fill-opacity=".07" stroke="#1F6FEB" stroke-width="1.5"/>
+<text x="480" y="84" text-anchor="middle" font-family="var(--font-sans)" font-size="13" fill="#1F6FEB" font-weight="500">Arduino Nano</text>
+<text x="480" y="98" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#1F6FEB">ATmega328P · 16 MHz</text>
+
+<!-- Pinos esquerda (D) -->
+<g font-family="var(--font-sans)" font-size="10" fill="#1F6FEB">
+<text x="370" y="128">D0</text><text x="370" y="148">D1</text>
+<text x="370" y="168" font-weight="500">D2 ← RPM</text>
+<text x="370" y="188">D3</text><text x="370" y="208">D4</text><text x="370" y="228">D5</text>
+<text x="370" y="248">D6</text><text x="370" y="268">D7</text><text x="370" y="288">D8</text>
+<text x="370" y="308">D9</text><text x="370" y="328">D10</text><text x="370" y="348">D11</text>
+<text x="370" y="368">D12</text><text x="370" y="388">D13</text>
+<text x="370" y="418" fill="#DC2626">5V</text>
+<text x="370" y="438" fill="#374151">GND</text>
+</g>
+
+<!-- Pinos direita (A) -->
+<g font-family="var(--font-sans)" font-size="10" text-anchor="end" fill="#D97706">
+<text x="592" y="248">A0 → HALL0 (1ª)</text>
+<text x="592" y="268">A1 → HALL3 (5ª)</text>
+<text x="592" y="288">A2 → HALL1 (2ª)</text>
+<text x="592" y="308">A3 → HALL2 (Ré)</text>
+<text x="592" y="328" fill="#16a34a">A4 → SDA</text>
+<text x="592" y="348" fill="#16a34a">A5 → SCL</text>
+<text x="592" y="368">A6</text><text x="592" y="388">A7 → RPM sim</text>
+</g>
+
+<!-- 5V → trilha -->
+<line x1="393" y1="412" x2="393" y2="48" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+<circle cx="393" cy="48" r="4" fill="#DC2626"/>
+<!-- GND → trilha -->
+<line x1="416" y1="432" x2="416" y2="478" stroke="#374151" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+<circle cx="416" cy="478" r="4" fill="#374151"/>
+
+<!-- KRE3 e KRE4 -->
+<rect x="600" y="246" width="70" height="90" rx="6" fill="#059669" fill-opacity=".9"/>
+<text x="635" y="270" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="white" font-weight="500">KRE3</text>
+<text x="635" y="282" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">câmbio</text>
+<text x="635" y="294" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.7)">6 pinos</text>
+<text x="605" y="310" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">5V GND</text>
+<text x="605" y="322" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">H0 H3 H1 H2</text>
+<text x="605" y="334" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.7)">blindado</text>
+
+<rect x="600" y="348" width="70" height="70" rx="6" fill="#059669" fill-opacity=".9"/>
+<text x="635" y="372" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="white" font-weight="500">KRE4</text>
+<text x="635" y="384" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">cockpit</text>
+<text x="635" y="396" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.7)">4 pinos</text>
+<text x="605" y="410" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">5V GND SDA SCL</text>
+</svg>
+</div>
+
+<!-- ══ COCKPIT ══ -->
+<div class="panel" id="tab-cockpit">
+<svg width="100%" viewBox="0 0 680 420" role="img">
+<title>Detalhe do Cockpit — OLED e MPU-6050 em paralelo no barramento I2C</title>
+<desc>Pod 3D na coluna de direção com OLED SSD1309 e MPU-6050 conectados ao barramento I2C via KRE4</desc>
+<defs>
+  <marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- Pod 3D contorno -->
+<rect x="180" y="40" width="380" height="320" rx="20" fill="none" stroke="var(--color-border-secondary)" stroke-width="1.5" stroke-dasharray="6,4"/>
+<text x="370" y="30" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="var(--color-text-secondary)" font-style="italic">Pod 3D — coluna de direção</text>
+
+<!-- Bus I2C horizontal -->
+<line x1="220" y1="180" x2="520" y2="180" stroke="var(--color-border-secondary)" stroke-width="2"/>
+<!-- SDA e SCL labels no bus -->
+<line x1="220" y1="170" x2="520" y2="170" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="5,3"/>
+<line x1="220" y1="190" x2="520" y2="190" stroke="#d97706" stroke-width="1.5" stroke-dasharray="5,3"/>
+<text x="370" y="162" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#16a34a" font-weight="500">SDA (A4)</text>
+<text x="370" y="205" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="#d97706" font-weight="500">SCL (A5)</text>
+
+<!-- KRE4-C (recepção) -->
+<rect x="196" y="58" width="80" height="100" rx="8" fill="#059669" fill-opacity=".9"/>
+<text x="236" y="82" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="white" font-weight="500">KRE4-C</text>
+<text x="236" y="96" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.8)">recepção</text>
+<g font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.9)">
+<text x="206" y="115">● 5V</text>
+<text x="206" y="127">● GND</text>
+<text x="206" y="139">● SDA</text>
+<text x="206" y="151">● SCL</text>
+</g>
+
+<!-- fios KRE4 → bus -->
+<line x1="276" y1="139" x2="340" y2="170" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr3)"/>
+<line x1="276" y1="151" x2="340" y2="190" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr3)"/>
+
+<!-- 5V / GND locais -->
+<line x1="236" y1="58" x2="236" y2="40" stroke="#DC2626" stroke-width="2"/>
+<line x1="220" y1="40" x2="520" y2="40" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="4,3"/>
+<text x="536" y="44" font-family="var(--font-sans)" font-size="9" fill="#DC2626" font-weight="500">5V local</text>
+<line x1="236" y1="158" x2="236" y2="360" stroke="#374151" stroke-width="1.5" stroke-dasharray="3,2"/>
+<line x1="220" y1="360" x2="520" y2="360" stroke="#374151" stroke-width="1.5" stroke-dasharray="4,3"/>
+<text x="536" y="364" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" font-weight="500">GND local</text>
+
+<!-- OLED SSD1309 -->
+<rect x="340" y="56" width="170" height="100" rx="10" fill="#1F6FEB" fill-opacity=".9"/>
+<text x="425" y="90" text-anchor="middle" font-family="var(--font-sans)" font-size="13" fill="white" font-weight="500">OLED 2.42"</text>
+<text x="425" y="108" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="rgba(255,255,255,.9)">SSD1309 · 128×64</text>
+<text x="425" y="124" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="rgba(255,255,255,.8)">I2C addr: 0x3C</text>
+<text x="425" y="138" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.7)">VCC GND SDA SCL</text>
+<!-- cap 100nF OLED -->
+<rect x="428" y="60" width="44" height="18" rx="4" fill="#B45309"/>
+<text x="450" y="73" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white">100nF local</text>
+
+<!-- fios OLED ↕ bus -->
+<line x1="425" y1="156" x2="425" y2="170" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr3)"/>
+<line x1="435" y1="156" x2="435" y2="190" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr3)"/>
+<line x1="365" y1="156" x2="365" y2="40" stroke="#DC2626" stroke-width="1.5" marker-end="url(#arr3)"/>
+<circle cx="365" cy="40" r="3" fill="#DC2626"/>
+<line x1="350" y1="156" x2="350" y2="360" stroke="#374151" stroke-width="1.5" marker-end="url(#arr3)"/>
+<circle cx="350" cy="360" r="3" fill="#374151"/>
+
+<!-- MPU-6050 -->
+<rect x="340" y="220" width="170" height="120" rx="10" fill="#1F6FEB" fill-opacity=".75"/>
+<text x="425" y="252" text-anchor="middle" font-family="var(--font-sans)" font-size="13" fill="white" font-weight="500">MPU-6050</text>
+<text x="425" y="268" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="rgba(255,255,255,.9)">Acelerômetro + Giroscópio</text>
+<text x="425" y="284" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="rgba(255,255,255,.8)">I2C addr: 0x68</text>
+<!-- AD0 → GND destaque -->
+<rect x="350" y="294" width="140" height="20" rx="4" fill="#DC2626" fill-opacity=".9"/>
+<text x="420" y="308" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="white" font-weight="500">AD0 → GND · OBRIGATÓRIO</text>
+<text x="425" y="330" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.7)">VCC GND SDA SCL AD0</text>
+
+<!-- fios MPU ↕ bus -->
+<line x1="415" y1="220" x2="415" y2="190" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr3)"/>
+<line x1="425" y1="220" x2="425" y2="170" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr3)"/>
+<line x1="375" y1="220" x2="375" y2="40" stroke="#DC2626" stroke-width="1.5" marker-end="url(#arr3)"/>
+<circle cx="375" cy="40" r="3" fill="#DC2626"/>
+<line x1="360" y1="340" x2="360" y2="360" stroke="#374151" stroke-width="1.5" marker-end="url(#arr3)"/>
+<circle cx="360" cy="360" r="3" fill="#374151"/>
+
+<!-- eixo X label -->
+<text x="535" y="280" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="var(--color-text-secondary)">Eixo X</text>
+<text x="535" y="295" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)">alinhado ao</text>
+<text x="535" y="310" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)">eixo do carro</text>
+<path d="M515 280 L400 270" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2" marker-end="url(#arr3)"/>
+
+<!-- nota cap -->
+<text x="370" y="395" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)">⚠ Cap 100nF deve ser soldado nos pinos VCC/GND de cada módulo — não na Central</text>
+</svg>
+</div>
+
+<!-- ══ HALL ══ -->
+<div class="panel" id="tab-hall">
+<svg width="100%" viewBox="0 0 680 400" role="img">
+<title>PCB Hall — 4 sensores AH3503 na grade do câmbio H com ímãs de neodímio</title>
+<desc>Placa customizada UPIR com 4 sensores Hall lineares detectando posição da alavanca de câmbio no padrão H</desc>
+<defs>
+  <marker id="arr4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- grade H do câmbio -->
+<rect x="300" y="40" width="340" height="320" rx="12" fill="none" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="5,3"/>
+<text x="470" y="30" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="var(--color-text-secondary)" font-style="italic">Grade H do câmbio (visão de cima)</text>
+
+<!-- trilhos H -->
+<line x1="380" y1="100" x2="560" y2="100" stroke="var(--color-border-tertiary)" stroke-width="3" stroke-linecap="round"/>
+<line x1="380" y1="200" x2="560" y2="200" stroke="var(--color-border-tertiary)" stroke-width="3" stroke-linecap="round"/>
+<line x1="380" y1="300" x2="560" y2="300" stroke="var(--color-border-tertiary)" stroke-width="3" stroke-linecap="round"/>
+<line x1="470" y1="100" x2="470" y2="300" stroke="var(--color-border-tertiary)" stroke-width="3" stroke-linecap="round"/>
+
+<!-- posições da alavanca -->
+<circle cx="380" cy="100" r="10" fill="none" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="2,2"/>
+<text x="360" y="90" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)">1ª</text>
+<circle cx="560" cy="100" r="10" fill="none" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="2,2"/>
+<text x="580" y="90" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)">2ª</text>
+<circle cx="380" cy="200" r="10" fill="none" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="2,2"/>
+<text x="360" y="205" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)">3ª</text>
+<circle cx="560" cy="200" r="10" fill="none" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="2,2"/>
+<text x="580" y="205" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)">4ª</text>
+<circle cx="380" cy="300" r="10" fill="none" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="2,2"/>
+<text x="360" y="305" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)">5ª</text>
+<circle cx="560" cy="300" r="10" fill="none" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="2,2"/>
+<text x="580" y="305" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)">Ré</text>
+
+<!-- Neutro -->
+<text x="470" y="205" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)">N</text>
+
+<!-- Sensores Hall (fixos no suporte, em torno da haste) -->
+<!-- HALL0 — 1ª (canto sup esq) -->
+<rect x="318" y="60" width="60" height="52" rx="6" fill="#16a34a" fill-opacity=".9"/>
+<text x="348" y="82" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">AH3503</text>
+<text x="348" y="95" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.9)">HALL0</text>
+<text x="348" y="105" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">→ A0 (1ª)</text>
+
+<!-- HALL1 — 2ª (canto sup dir) -->
+<rect x="560" y="60" width="60" height="52" rx="6" fill="#d97706" fill-opacity=".9"/>
+<text x="590" y="82" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">AH3503</text>
+<text x="590" y="95" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.9)">HALL1</text>
+<text x="590" y="105" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">→ A2 (2ª)</text>
+
+<!-- HALL3 — 5ª (canto inf esq) -->
+<rect x="318" y="274" width="60" height="52" rx="6" fill="#2563eb" fill-opacity=".9"/>
+<text x="348" y="296" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">AH3503</text>
+<text x="348" y="309" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.9)">HALL3</text>
+<text x="348" y="319" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">→ A1 (5ª)</text>
+
+<!-- HALL2 — Ré (canto inf dir) -->
+<rect x="560" y="274" width="60" height="52" rx="6" fill="#6b7280" fill-opacity=".9"/>
+<text x="590" y="296" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">AH3503</text>
+<text x="590" y="309" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.9)">HALL2</text>
+<text x="590" y="319" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">→ A3 (Ré)</text>
+
+<!-- ímãs na haste -->
+<circle cx="380" cy="100" r="8" fill="#374151" fill-opacity=".7"/>
+<text x="380" y="104" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="white">N</text>
+<text x="380" y="118" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="var(--color-text-secondary)">ímã</text>
+
+<!-- KRE3-H -->
+<rect x="40" y="150" width="90" height="120" rx="8" fill="#059669" fill-opacity=".9"/>
+<text x="85" y="178" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="white" font-weight="500">KRE3-H</text>
+<text x="85" y="192" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.8)">6 pinos</text>
+<g font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.9)">
+<text x="52" y="210">1 · 5V</text>
+<text x="52" y="222">2 · GND</text>
+<text x="52" y="234">3 · H0</text>
+<text x="52" y="246">4 · H3</text>
+<text x="52" y="258">5 · H1</text>
+<text x="52" y="270">6 · H2</text>
+</g>
+
+<!-- fios KRE3-H → sensores -->
+<line x1="130" y1="232" x2="317" y2="86" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr4)"/>
+<line x1="130" y1="246" x2="317" y2="300" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr4)"/>
+<line x1="130" y1="258" x2="558" y2="86" stroke="#d97706" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr4)"/>
+<line x1="130" y1="270" x2="558" y2="300" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr4)"/>
+
+<!-- 5V/GND -->
+<line x1="85" y1="150" x2="85" y2="50" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr4)"/>
+<text x="95" y="105" font-family="var(--font-sans)" font-size="8" fill="#DC2626">5V</text>
+<line x1="95" y1="270" x2="95" y2="370" stroke="#374151" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr4)"/>
+<text x="105" y="345" font-family="var(--font-sans)" font-size="8" fill="var(--color-text-secondary)">GND</text>
+
+<!-- blindagem nota -->
+<rect x="140" y="350" width="220" height="28" rx="6" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text x="250" y="363" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)">Malha do cabo → GND</text>
+<text x="250" y="373" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="#DC2626">somente na Central — não aqui</text>
+</svg>
+</div>
+
+<!-- ══ CIRCUITO RPM ══ -->
+<div class="panel" id="tab-opto">
+<svg width="100%" viewBox="0 0 680 380" role="img">
+<title>Circuito completo do optoacoplador PC817 para leitura de RPM da bobina</title>
+<desc>Lado sujo: bobina, TVS, R1, R2, 1N4007 e PC817 anodo. Lado limpo: PC817 coletor, R3 pull-up e pino D2 do Arduino</desc>
+<defs>
+  <marker id="arr5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- título lados -->
+<rect x="40" y="30" width="290" height="320" rx="10" fill="#7f1d1d" fill-opacity=".04" stroke="#DC2626" stroke-width="0.5" stroke-dasharray="4,3"/>
+<text x="185" y="22" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="#DC2626" font-weight="500">⚡ LADO SUJO — alta tensão (bobina)</text>
+
+<rect x="370" y="30" width="280" height="320" rx="10" fill="#065F46" fill-opacity=".04" stroke="#059669" stroke-width="0.5" stroke-dasharray="4,3"/>
+<text x="510" y="22" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="#059669" font-weight="500">🔒 LADO LIMPO — 5V (Arduino)</text>
+
+<!-- ── LADO SUJO ── -->
+<!-- Bobina -->
+<rect x="56" y="50" width="80" height="50" rx="7" fill="#7C3AED" fill-opacity=".9"/>
+<text x="96" y="72" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="white" font-weight="500">Bobina</text>
+<text x="96" y="86" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.8)">~400V pico</text>
+
+<!-- linha sinal bobina → -->
+<line x1="136" y1="75" x2="166" y2="75" stroke="#7C3AED" stroke-width="2" marker-end="url(#arr5)"/>
+
+<!-- TVS P6KE15A (paralelo) -->
+<rect x="166" y="50" width="68" height="50" rx="6" fill="#6D28D9" fill-opacity=".9"/>
+<text x="200" y="70" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">TVS</text>
+<text x="200" y="82" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.9)">P6KE15A</text>
+<text x="200" y="93" text-anchor="middle" font-family="var(--font-sans)" font-size="6" fill="rgba(255,255,255,.7)">paralelo</text>
+<!-- linha GND do TVS -->
+<line x1="200" y1="100" x2="200" y2="340" stroke="#7f1d1d" stroke-width="1" stroke-dasharray="3,2"/>
+
+<!-- R1 10k 2W -->
+<line x1="234" y1="75" x2="256" y2="75" stroke="#7C3AED" stroke-width="2"/>
+<rect x="256" y="58" width="68" height="34" rx="5" fill="#7C3AED" fill-opacity=".85"/>
+<text x="290" y="72" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">R1 · 10kΩ</text>
+<text x="290" y="84" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">2W — série</text>
+
+<!-- R2 1k -->
+<line x1="324" y1="75" x2="334" y2="75" stroke="#7C3AED" stroke-width="2"/>
+<rect x="56" y="140" width="58" height="34" rx="5" fill="#7C3AED" fill-opacity=".85"/>
+<text x="85" y="154" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">R2 · 1kΩ</text>
+<text x="85" y="165" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">¼W série</text>
+
+<!-- curva fio R1→R2 -->
+<path d="M290 92 L290 140 L114 140" fill="none" stroke="#7C3AED" stroke-width="1.5" marker-end="url(#arr5)"/>
+
+<!-- 1N4007 -->
+<rect x="140" y="140" width="68" height="34" rx="5" fill="#7C3AED" fill-opacity=".85"/>
+<text x="174" y="155" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="white" font-weight="500">1N4007</text>
+<text x="174" y="166" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.8)">catodo → PC817</text>
+<!-- seta faixa -->
+<text x="204" y="161" font-family="var(--font-sans)" font-size="12" fill="white">▶</text>
+
+<!-- PC817 chip (grande, central) -->
+<rect x="240" y="120" width="110" height="120" rx="10" fill="#7C3AED" fill-opacity=".9"/>
+<text x="295" y="158" text-anchor="middle" font-family="var(--font-sans)" font-size="14" fill="white" font-weight="500">PC817</text>
+<text x="295" y="174" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="rgba(255,255,255,.8)">Optoacoplador</text>
+<text x="295" y="190" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.7)">DIP-4</text>
+<!-- pinos -->
+<text x="244" y="138" font-family="var(--font-sans)" font-size="9" fill="rgba(255,255,255,.9)">1·</text>
+<text x="244" y="156" font-family="var(--font-sans)" font-size="9" fill="rgba(255,255,255,.9)">2·</text>
+<text x="334" y="138" font-family="var(--font-sans)" font-size="9" fill="rgba(255,255,255,.9)">·4</text>
+<text x="334" y="156" font-family="var(--font-sans)" font-size="9" fill="rgba(255,255,255,.9)">·3</text>
+<!-- isolamento visual -->
+<line x1="295" y1="200" x2="295" y2="220" stroke="rgba(255,255,255,.3)" stroke-width="1" stroke-dasharray="2,2"/>
+<text x="295" y="232" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.5)">isolamento</text>
+
+<!-- fio 1N4007 → pino 1 PC817 -->
+<line x1="208" y1="157" x2="238" y2="135" stroke="#7C3AED" stroke-width="1.5" marker-end="url(#arr5)"/>
+
+<!-- GND bobina → pino 2 PC817 -->
+<line x1="200" y1="340" x2="246" y2="153" stroke="#7f1d1d" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arr5)"/>
+<text x="120" y="355" font-family="var(--font-sans)" font-size="8" fill="#7f1d1d">GND bobina (sujo — não conectar ao Arduino)</text>
+
+<!-- ── LADO LIMPO ── -->
+<!-- 5V -->
+<line x1="386" y1="50" x2="640" y2="50" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="4,3"/>
+<text x="390" y="44" font-family="var(--font-sans)" font-size="9" fill="#DC2626" font-weight="500">+5V limpo</text>
+
+<!-- R3 pull-up -->
+<rect x="386" y="100" width="80" height="36" rx="6" fill="#DC2626" fill-opacity=".9"/>
+<text x="426" y="116" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="white" font-weight="500">R3 · 10kΩ</text>
+<text x="426" y="128" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,.9)">pull-up — CRÍTICO</text>
+<!-- R3 → 5V -->
+<line x1="426" y1="100" x2="426" y2="50" stroke="#DC2626" stroke-width="1.5" marker-end="url(#arr5)"/>
+<circle cx="426" cy="50" r="4" fill="#DC2626"/>
+
+<!-- pino 4 PC817 → R3 / D2 -->
+<line x1="350" y1="135" x2="385" y2="118" stroke="#059669" stroke-width="2" marker-end="url(#arr5)"/>
+
+<!-- nó de junção pino4 / R3 / D2 -->
+<circle cx="426" cy="137" r="5" fill="#059669"/>
+<text x="438" y="135" font-family="var(--font-sans)" font-size="8" fill="#059669" font-weight="500">nó</text>
+<line x1="426" y1="136" x2="426" y2="100" stroke="#059669" stroke-width="2"/>
+
+<!-- D2 Arduino -->
+<line x1="431" y1="137" x2="560" y2="137" stroke="#059669" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arr5)"/>
+<rect x="560" y="116" width="96" height="42" rx="7" fill="#1F6FEB" fill-opacity=".9"/>
+<text x="608" y="135" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="white" font-weight="500">Nano D2</text>
+<text x="608" y="149" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,.8)">attachInterrupt</text>
+
+<!-- pino 3 PC817 → GND limpo -->
+<line x1="350" y1="153" x2="430" y2="200" stroke="#374151" stroke-width="1.5" marker-end="url(#arr5)"/>
+<line x1="430" y1="200" x2="430" y2="340" stroke="#374151" stroke-width="1.5" stroke-dasharray="3,2"/>
+<line x1="386" y1="340" x2="640" y2="340" stroke="#374151" stroke-width="1.5" stroke-dasharray="4,3"/>
+<text x="390" y="355" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" font-weight="500">GND limpo</text>
+
+<!-- sinal de saída (onda quadrada) -->
+<rect x="490" y="190" width="140" height="70" rx="6" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text x="560" y="206" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="var(--color-text-secondary)">sinal D2 (onda quadrada)</text>
+<!-- símbolo onda quadrada simples -->
+<polyline points="510,250 510,220 530,220 530,250 550,250 550,220 570,220 570,250 590,250 590,220 610,220 610,250" fill="none" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="497" y1="250" x2="512" y2="250" stroke="#059669" stroke-width="1.5"/>
+<line x1="608" y1="250" x2="622" y2="250" stroke="#059669" stroke-width="1.5"/>
+</svg>
+</div>
+</div>
+
+<script>
+function show(id){
+  ['overview','central','cockpit','hall','opto'].forEach((t,i)=>{
+    document.getElementById('tab-'+t).style.display = t===id ? 'block' : 'none';
+    document.querySelectorAll('.tab')[i].classList.toggle('on', t===id);
+  });
+}
+</script>
