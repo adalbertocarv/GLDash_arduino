@@ -1,0 +1,607 @@
+
+<style>
+h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.tabs{display:flex;gap:0;margin-bottom:0;border-bottom:1px solid var(--color-border-tertiary)}
+.tab{padding:8px 14px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;border-bottom:2px solid transparent;user-select:none;white-space:nowrap}
+.tab.on{color:var(--color-text-info);border-bottom-color:var(--color-text-info);font-weight:500}
+.panel{display:none;padding:10px 0}.panel.on{display:block}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:10px}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--color-text-secondary)}
+.leg-line{width:20px;height:4px;border-radius:2px}
+.tip{font-size:11px;color:var(--color-text-secondary);margin-top:8px;line-height:1.6}
+</style>
+
+<h2 class="sr-only">Ilustração da construção dos circuitos em placa de fenolite — trilhas de cobre, componentes e soldagem para os três módulos do GL-Dash</h2>
+
+<div class="tabs">
+  <div class="tab on" onclick="sw(0)">① Central elétrica</div>
+  <div class="tab" onclick="sw(1)">② Cockpit</div>
+  <div class="tab" onclick="sw(2)">③ PCB Hall</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAINEL 1 — CENTRAL ELÉTRICA
+══════════════════════════════════════════ -->
+<div class="panel on" id="p0">
+<div class="legend">
+  <div class="leg"><div class="leg-line" style="background:#c0392b"></div>Trilha +5V</div>
+  <div class="leg"><div class="leg-line" style="background:#2c3e50"></div>Trilha GND</div>
+  <div class="leg"><div class="leg-line" style="background:#8e44ad;height:3px;border-top:2px dashed #8e44ad"></div>Fio sinal</div>
+  <div class="leg"><div class="leg-line" style="background:#7f1d1d;height:3px;border-top:2px dashed #7f1d1d"></div>GND sujo (bobina)</div>
+</div>
+<svg width="100%" viewBox="0 0 680 560" role="img">
+<title>Placa fenolite da Central Elétrica GL-Dash</title>
+<desc>Ilustração detalhada mostrando onde soldar cada componente, trilhas de cobre positivo e GND, e posição dos conectores KRE na placa perfurada da Central Elétrica</desc>
+<defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <!-- padrão de furos da placa -->
+  <pattern id="holes" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+    <circle cx="7" cy="7" r="1.4" fill="#b5aa8a" opacity="0.5"/>
+  </pattern>
+</defs>
+
+<!-- PLACA FENOLITE BASE -->
+<rect x="30" y="30" width="400" height="500" rx="6" fill="#c8b560" opacity="0.18"/>
+<rect x="30" y="30" width="400" height="500" rx="6" fill="url(#holes)"/>
+<rect x="30" y="30" width="400" height="500" rx="6" fill="none" stroke="#a89440" stroke-width="2"/>
+<text class="ts" x="230" y="22" text-anchor="middle" fill="var(--color-text-secondary)">Placa fenolite perfurada — 30×36 furos (aprox. 8×9 cm) — vista de cima</text>
+
+<!-- ══ TRILHA +5V (horizontal topo, y=60) ══ -->
+<rect x="36" y="56" width="388" height="8" rx="4" fill="#c0392b" opacity="0.85"/>
+<text x="36" y="52" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="#c0392b">+5V</text>
+
+<!-- ══ TRILHA GND limpo (horizontal base, y=508) ══ -->
+<rect x="36" y="504" width="388" height="8" rx="4" fill="#2c3e50" opacity="0.85"/>
+<text x="36" y="524" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="#2c3e50">GND</text>
+
+<!-- ══ TRILHA GND sujo (y=490, tracejada vermelha escura) ══ -->
+<rect x="36" y="488" width="180" height="5" rx="2" fill="#7f1d1d" opacity="0.7"/>
+<text x="36" y="483" font-family="var(--font-sans)" font-size="9" fill="#7f1d1d">GND sujo (bobina — NÃO ligar ao GND do Arduino)</text>
+
+<!-- ══ KRE1 — ENTRADA 12V (col 36–90, row 80–130) ══ -->
+<rect x="38" y="80" width="56" height="50" rx="4" fill="#059669" opacity="0.9"/>
+<rect x="38" y="80" width="56" height="50" rx="4" fill="none" stroke="#065f46" stroke-width="1"/>
+<text x="66" y="101" text-anchor="middle" font-family="var(--font-sans)" font-size="9" font-weight="500" fill="white">KRE1</text>
+<text x="66" y="113" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,0.85)">+12V · GND</text>
+<text x="42" y="124" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.7)">① ②</text>
+<!-- fios KRE1 -->
+<line x1="52" y1="130" x2="52" y2="170" stroke="#2c3e50" stroke-width="3" stroke-linecap="round"/>
+<text x="55" y="155" font-family="var(--font-sans)" font-size="8" fill="#2c3e50">→ fusível</text>
+
+<!-- ══ FUSÍVEL 2A ══ -->
+<rect x="38" y="170" width="56" height="28" rx="4" fill="#d97706" opacity="0.9"/>
+<text x="66" y="184" text-anchor="middle" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="white">Fusível 2A</text>
+<text x="66" y="193" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.8)">linha 15</text>
+
+<!-- ══ 1N5408 anti-inversão ══ -->
+<rect x="104" y="80" width="64" height="26" rx="4" fill="#7c3aed" opacity="0.9"/>
+<text x="136" y="95" text-anchor="middle" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="white">1N5408</text>
+<text x="160" y="98" font-family="var(--font-sans)" font-size="11" fill="white">▶</text>
+<text x="136" y="104" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.75)">faixa → LM2596</text>
+<!-- trilha 1N5408 → LM2596 -->
+<line x1="168" y1="93" x2="188" y2="93" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
+
+<!-- ══ LM2596 ══ -->
+<rect x="188" y="72" width="90" height="60" rx="6" fill="#d4521a" opacity="0.9"/>
+<rect x="188" y="72" width="90" height="60" rx="6" fill="none" stroke="#92400e" stroke-width="1"/>
+<text x="233" y="97" text-anchor="middle" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="white">LM2596</text>
+<text x="233" y="110" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,0.85)">12V → 5.00V</text>
+<text x="233" y="122" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.7)">ajustar trimpot!</text>
+<!-- trilha saída LM2596 → trilha +5V -->
+<line x1="233" y1="72" x2="233" y2="64" stroke="#c0392b" stroke-width="4" stroke-linecap="round"/>
+<circle cx="233" cy="64" r="4" fill="#c0392b"/>
+<!-- trilha GND LM2596 → trilha GND -->
+<line x1="233" y1="132" x2="233" y2="504" stroke="#2c3e50" stroke-width="3" stroke-linecap="round" stroke-dasharray="4,3" opacity="0.5"/>
+
+<!-- ══ 470µF (perto do LM2596 IN) ══ -->
+<rect x="104" y="115" width="30" height="56" rx="4" fill="#b45309" opacity="0.9"/>
+<text x="119" y="137" text-anchor="middle" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="white">470</text>
+<text x="119" y="148" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.85)">µF</text>
+<text x="119" y="160" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.7)">25V</text>
+<!-- perna + do cap → trilha 12V (laranja) -->
+<line x1="119" y1="115" x2="119" y2="100" stroke="#d97706" stroke-width="2.5" stroke-linecap="round"/>
+<text x="107" y="110" font-family="var(--font-sans)" font-size="8" fill="#d97706">+</text>
+<!-- perna - do cap → GND -->
+<line x1="119" y1="171" x2="119" y2="504" stroke="#2c3e50" stroke-width="2" stroke-linecap="round" stroke-dasharray="4,3" opacity="0.4"/>
+<text x="107" y="178" font-family="var(--font-sans)" font-size="8" fill="#2c3e50">−</text>
+
+<!-- ══ 100nF saída ══ -->
+<rect x="140" y="130" width="28" height="28" rx="3" fill="#b45309" opacity="0.9"/>
+<text x="154" y="145" text-anchor="middle" font-family="var(--font-sans)" font-size="7" font-weight="500" fill="white">100nF</text>
+<!-- 100nF → +5V e GND -->
+<line x1="154" y1="130" x2="154" y2="64" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.7"/>
+<circle cx="154" cy="64" r="3" fill="#c0392b"/>
+<line x1="154" y1="158" x2="154" y2="504" stroke="#2c3e50" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.4"/>
+
+<!-- ══ ZONA PC817 — fundo destaque ══ -->
+<rect x="34" y="210" width="220" height="270" rx="6" fill="#7c3aed" opacity="0.05" stroke="#7c3aed" stroke-width="0.5" stroke-dasharray="5,3"/>
+<text x="38" y="224" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="#7c3aed">ZONA PC817</text>
+<line x1="155" y1="212" x2="155" y2="478" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="4,3"/>
+<text x="90" y="475" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="#7f1d1d">SUJO</text>
+<text x="200" y="475" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="#059669">LIMPO</text>
+
+<!-- ══ KRE2 — BOBINA ══ -->
+<rect x="38" y="228" width="56" height="40" rx="4" fill="#059669" opacity="0.9"/>
+<text x="66" y="246" text-anchor="middle" font-family="var(--font-sans)" font-size="9" font-weight="500" fill="white">KRE2</text>
+<text x="66" y="258" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.85)">Bobina</text>
+<!-- GND sujo → trilha sujo -->
+<line x1="50" y1="268" x2="50" y2="490" stroke="#7f1d1d" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4,3"/>
+
+<!-- ══ TVS P6KE15A (paralelo com KRE2) ══ -->
+<rect x="38" y="278" width="56" height="26" rx="4" fill="#6d28d9" opacity="0.9"/>
+<text x="66" y="292" text-anchor="middle" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="white">TVS</text>
+<text x="66" y="301" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.8)">P6KE15A ‖</text>
+
+<!-- ══ R1 10k 2W ══ -->
+<rect x="38" y="315" width="56" height="26" rx="4" fill="#7c3aed" opacity="0.85"/>
+<text x="66" y="329" text-anchor="middle" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="white">R1 10kΩ</text>
+<text x="66" y="339" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.8)">2W série</text>
+
+<!-- ══ R2 1k ══ -->
+<rect x="38" y="352" width="42" height="26" rx="4" fill="#7c3aed" opacity="0.85"/>
+<text x="59" y="366" text-anchor="middle" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="white">R2 1kΩ</text>
+<text x="59" y="375" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.8)">¼W</text>
+
+<!-- ══ 1N4007 ══ -->
+<rect x="88" y="352" width="56" height="26" rx="4" fill="#7c3aed" opacity="0.85"/>
+<text x="116" y="366" text-anchor="middle" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="white">1N4007</text>
+<text x="136" y="369" font-family="var(--font-sans)" font-size="10" fill="white">▶</text>
+
+<!-- ══ PC817 (grande, central na zona) ══ -->
+<rect x="160" y="290" width="80" height="80" rx="6" fill="#7c3aed" opacity="0.9"/>
+<rect x="160" y="290" width="80" height="80" rx="6" fill="none" stroke="#5b21b6" stroke-width="1.5"/>
+<text x="200" y="327" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="500" fill="white">PC817</text>
+<text x="200" y="342" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="rgba(255,255,255,0.8)">DIP-4</text>
+<!-- pinos -->
+<text x="163" y="305" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.7)">1·anodo</text>
+<text x="163" y="320" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.7)">2·catodo</text>
+<text x="204" y="305" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.7)">4·emit.</text>
+<text x="204" y="320" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.7)">3·colet.</text>
+
+<!-- fios lado sujo → PC817 pino 1 -->
+<line x1="144" y1="365" x2="159" y2="305" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+<!-- pino 2 PC817 → GND sujo -->
+<line x1="165" y1="370" x2="50" y2="370" stroke="#7f1d1d" stroke-width="1.5" stroke-dasharray="3,2"/>
+<line x1="50" y1="370" x2="50" y2="490" stroke="#7f1d1d" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+<!-- ══ R3 pull-up (LADO LIMPO) ══ -->
+<rect x="160" y="390" width="80" height="26" rx="4" fill="#c0392b" opacity="0.9"/>
+<text x="200" y="404" text-anchor="middle" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="white">R3 10kΩ pull-up</text>
+<text x="200" y="413" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.9)">pino4 → +5V ← CRÍTICO</text>
+<!-- R3 → trilha +5V -->
+<line x1="200" y1="390" x2="200" y2="64" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3,2"/>
+<circle cx="200" cy="64" r="4" fill="#c0392b"/>
+<!-- pino 3 PC817 → GND limpo -->
+<line x1="240" y1="350" x2="260" y2="350" stroke="#2c3e50" stroke-width="2" stroke-linecap="round"/>
+<line x1="260" y1="350" x2="260" y2="504" stroke="#2c3e50" stroke-width="2" stroke-linecap="round" stroke-dasharray="3,2" opacity="0.6"/>
+<circle cx="260" cy="504" r="3" fill="#2c3e50"/>
+
+<!-- fio D2 (pino 4 PC817 → sinal para o Nano) -->
+<line x1="240" y1="302" x2="290" y2="302" stroke="#8e44ad" stroke-width="2" stroke-dasharray="5,3" stroke-linecap="round" marker-end="url(#ar)"/>
+<text x="248" y="295" font-family="var(--font-sans)" font-size="8" fill="#8e44ad" font-weight="500">→ D2</text>
+
+<!-- ══ SOQUETE ARDUINO NANO ══ -->
+<rect x="286" y="90" width="118" height="290" rx="8" fill="#1f6feb" opacity="0.1" stroke="#1f6feb" stroke-width="1.5"/>
+<text x="345" y="108" text-anchor="middle" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="#1f6feb">Soquete Nano</text>
+<text x="345" y="120" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="#1f6feb">15+15 pinos fêmea</text>
+<!-- pinos lado esquerdo -->
+<g font-family="var(--font-sans)" font-size="8" fill="#1f6feb">
+<text x="290" y="148">D2←</text>
+<text x="290" y="162">D3</text><text x="290" y="176">D4</text>
+<text x="290" y="190">D5</text><text x="290" y="204">D6</text>
+<text x="290" y="218">D7</text><text x="290" y="232">D8</text>
+<text x="290" y="246">D9</text><text x="290" y="260">D10</text>
+<text x="290" y="274">D11</text><text x="290" y="288">D12</text>
+<text x="290" y="302">D13</text>
+<text x="290" y="330" fill="#c0392b">5V</text>
+<text x="290" y="344" fill="#2c3e50">GND</text>
+<text x="290" y="358" fill="#2c3e50">GND</text>
+</g>
+<!-- pinos lado direito -->
+<g font-family="var(--font-sans)" font-size="8" fill="#d97706" text-anchor="end">
+<text x="400" y="200">A0→KRE3</text>
+<text x="400" y="214">A1→KRE3</text>
+<text x="400" y="228">A2→KRE3</text>
+<text x="400" y="242">A3→KRE3</text>
+<text x="400" y="256" fill="#16a34a">A4 SDA</text>
+<text x="400" y="270" fill="#16a34a">A5 SCL</text>
+<text x="400" y="284">A6</text>
+<text x="400" y="298">A7 RPM</text>
+</g>
+
+<!-- trilha +5V → soquete -->
+<line x1="325" y1="64" x2="325" y2="90" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
+<circle cx="325" cy="64" r="4" fill="#c0392b"/>
+<!-- trilha GND → soquete -->
+<line x1="340" y1="380" x2="340" y2="504" stroke="#2c3e50" stroke-width="3" stroke-linecap="round"/>
+<circle cx="340" cy="504" r="4" fill="#2c3e50"/>
+
+<!-- ══ KRE3 — CÂMBIO ══ -->
+<rect x="416" y="90" width="52" height="120" rx="4" fill="#059669" opacity="0.9"/>
+<text x="442" y="112" text-anchor="middle" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="white">KRE3</text>
+<text x="442" y="123" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.85)">Câmbio</text>
+<g font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.9)">
+<text x="420" y="137">① 5V</text>
+<text x="420" y="150">② GND</text>
+<text x="420" y="163">③ H0</text>
+<text x="420" y="176">④ H3</text>
+<text x="420" y="189">⑤ H1</text>
+<text x="420" y="202">⑥ H2</text>
+</g>
+<!-- trilhas KRE3 → nano A0-A3 -->
+<line x1="416" y1="163" x2="400" y2="200" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,2"/>
+<line x1="416" y1="176" x2="400" y2="214" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4,2"/>
+<line x1="416" y1="189" x2="400" y2="228" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4,2"/>
+<line x1="416" y1="202" x2="400" y2="242" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="4,2"/>
+<!-- +5V → KRE3 -->
+<line x1="442" y1="90" x2="442" y2="64" stroke="#c0392b" stroke-width="2.5"/>
+<circle cx="442" cy="64" r="3.5" fill="#c0392b"/>
+<!-- GND → KRE3 -->
+<line x1="432" y1="210" x2="432" y2="504" stroke="#2c3e50" stroke-width="2" stroke-dasharray="3,2" opacity="0.6"/>
+<circle cx="432" cy="504" r="3" fill="#2c3e50"/>
+
+<!-- ══ KRE4 — COCKPIT ══ -->
+<rect x="416" y="225" width="52" height="90" rx="4" fill="#059669" opacity="0.9"/>
+<text x="442" y="245" text-anchor="middle" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="white">KRE4</text>
+<text x="442" y="256" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.85)">Cockpit</text>
+<g font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.9)">
+<text x="420" y="268">① 5V</text>
+<text x="420" y="281">② GND</text>
+<text x="420" y="294">③ SDA</text>
+<text x="420" y="307">④ SCL</text>
+</g>
+<!-- SDA/SCL → nano A4/A5 -->
+<line x1="416" y1="294" x2="400" y2="256" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,2"/>
+<line x1="416" y1="307" x2="400" y2="270" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4,2"/>
+<!-- +5V → KRE4 -->
+<line x1="456" y1="225" x2="456" y2="64" stroke="#c0392b" stroke-width="2.5"/>
+<circle cx="456" cy="64" r="3.5" fill="#c0392b"/>
+<!-- GND → KRE4 -->
+<line x1="446" y1="315" x2="446" y2="504" stroke="#2c3e50" stroke-width="2" stroke-dasharray="3,2" opacity="0.6"/>
+<circle cx="446" cy="504" r="3" fill="#2c3e50"/>
+
+<!-- ══ CALLOUTS DIREITA ══ -->
+<g font-family="var(--font-sans)" font-size="11" fill="var(--color-text-primary)">
+
+<!-- callout trilha 5V -->
+<line x1="424" y1="60" x2="468" y2="44" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="470" y="48" fill="#c0392b" font-weight="500">Trilha +5V</text>
+<text x="470" y="60" fill="var(--color-text-secondary)" font-size="9">Pernas de resistor soldadas em fileira horizontal</text>
+<text x="470" y="72" fill="var(--color-text-secondary)" font-size="9">do canto ao canto. Estanhar cada junção.</text>
+
+<!-- callout LM2596 -->
+<line x1="278" y1="102" x2="468" y2="95" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="470" y="99" fill="var(--color-text-primary)" font-weight="500">LM2596</text>
+<text x="470" y="111" fill="var(--color-text-secondary)" font-size="9">Ajustar para 5.00V com multímetro</text>
+<text x="470" y="123" fill="var(--color-text-secondary)" font-size="9">antes de ligar qualquer componente.</text>
+
+<!-- callout 470µF -->
+<line x1="119" y1="143" x2="468" y2="150" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="470" y="154" fill="var(--color-text-primary)" font-weight="500">Cap 470µF</text>
+<text x="470" y="166" fill="var(--color-text-secondary)" font-size="9">Perna longa (+) na trilha 12V.</text>
+<text x="470" y="178" fill="var(--color-text-secondary)" font-size="9">Soldar próximo ao LM2596 IN+.</text>
+
+<!-- callout PC817 -->
+<line x1="240" y1="330" x2="468" y2="240" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="470" y="244" fill="var(--color-text-primary)" font-weight="500">PC817</text>
+<text x="470" y="256" fill="var(--color-text-secondary)" font-size="9">Pino 1 vem do 1N4007.</text>
+<text x="470" y="268" fill="var(--color-text-secondary)" font-size="9">Pino 2 → GND sujo (KRE2 pino 2).</text>
+<text x="470" y="280" fill="var(--color-text-secondary)" font-size="9">Pino 3 → GND limpo.</text>
+<text x="470" y="292" fill="#c0392b" font-size="9" font-weight="500">Pino 4 → R3 + 5V + D2 (pull-up!).</text>
+
+<!-- callout GND sujo -->
+<line x1="155" y1="490" x2="468" y2="340" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="470" y="344" fill="#7f1d1d" font-weight="500">Trilha GND sujo</text>
+<text x="470" y="356" fill="var(--color-text-secondary)" font-size="9">Separada fisicamente da trilha GND.</text>
+<text x="470" y="368" fill="var(--color-text-secondary)" font-size="9">Liga apenas: KRE2 pino 2 e PC817 pino 2.</text>
+
+<!-- callout GND -->
+<line x1="200" y1="508" x2="468" y2="420" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="470" y="424" fill="#2c3e50" font-weight="500">Trilha GND limpo</text>
+<text x="470" y="436" fill="var(--color-text-secondary)" font-size="9">Fileira horizontal base. Liga Nano, caps,</text>
+<text x="470" y="448" fill="var(--color-text-secondary)" font-size="9">PC817 pino 3, LM2596, KRE3 e KRE4.</text>
+</g>
+</svg>
+<div class="tip">① Solde primeiro os resistores e diodos (menores). ② Depois os capacitores. ③ Depois os bornes KRE. ④ O soquete do Nano por último. ⑤ Encaixe o Nano apenas após verificar 5V com multímetro.</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAINEL 2 — COCKPIT
+══════════════════════════════════════════ -->
+<div class="panel" id="p1">
+<div class="legend">
+  <div class="leg"><div class="leg-line" style="background:#c0392b"></div>Trilha +5V</div>
+  <div class="leg"><div class="leg-line" style="background:#2c3e50"></div>Trilha GND</div>
+  <div class="leg"><div class="leg-line" style="background:#16a34a;height:3px;border-top:2px dashed #16a34a"></div>SDA (A4)</div>
+  <div class="leg"><div class="leg-line" style="background:#d97706;height:3px;border-top:2px dashed #d97706"></div>SCL (A5)</div>
+</div>
+<svg width="100%" viewBox="0 0 680 420" role="img">
+<title>Placa fenolite do Cockpit GL-Dash</title>
+<desc>Layout do módulo Cockpit: OLED 2.42", MPU-6050, capacitores de desacoplamento e borne KRE4-C em placa perfurada pequena montada no pod 3D</desc>
+<defs>
+  <marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <pattern id="holes2" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+    <circle cx="7" cy="7" r="1.4" fill="#b5aa8a" opacity="0.5"/>
+  </pattern>
+</defs>
+
+<!-- PLACA FENOLITE BASE (menor) -->
+<rect x="30" y="30" width="300" height="360" rx="6" fill="#c8b560" opacity="0.18"/>
+<rect x="30" y="30" width="300" height="360" rx="6" fill="url(#holes2)"/>
+<rect x="30" y="30" width="300" height="360" rx="6" fill="none" stroke="#a89440" stroke-width="2"/>
+<text class="ts" x="180" y="22" text-anchor="middle" fill="var(--color-text-secondary)">Placa pequena do Cockpit — montada no pod 3D</text>
+
+<!-- trilha +5V topo -->
+<rect x="36" y="46" width="288" height="7" rx="3" fill="#c0392b" opacity="0.85"/>
+<text x="36" y="42" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="#c0392b">+5V</text>
+<!-- trilha GND base -->
+<rect x="36" y="377" width="288" height="7" rx="3" fill="#2c3e50" opacity="0.85"/>
+<text x="36" y="396" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="#2c3e50">GND</text>
+<!-- barramento SDA horizontal -->
+<rect x="36" y="57" width="288" height="4" rx="2" fill="#16a34a" opacity="0.7"/>
+<text x="36" y="54" font-family="var(--font-sans)" font-size="8" fill="#16a34a">SDA</text>
+<!-- barramento SCL horizontal -->
+<rect x="36" y="66" width="288" height="4" rx="2" fill="#d97706" opacity="0.7"/>
+<text x="36" y="78" font-family="var(--font-sans)" font-size="8" fill="#d97706">SCL</text>
+
+<!-- ══ KRE4-C recepção ══ -->
+<rect x="38" y="88" width="56" height="80" rx="4" fill="#059669" opacity="0.9"/>
+<text x="66" y="112" text-anchor="middle" font-family="var(--font-sans)" font-size="9" font-weight="500" fill="white">KRE4-C</text>
+<text x="66" y="124" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.85)">recepção</text>
+<g font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.9)">
+<text x="42" y="140">① 5V</text>
+<text x="42" y="152">② GND</text>
+<text x="42" y="164">③ SDA</text>
+<text x="42" y="176">④ SCL</text>
+</g>
+<!-- fios KRE4-C → barramentos -->
+<line x1="66" y1="88" x2="66" y2="53" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="66" cy="53" r="3.5" fill="#c0392b"/>
+<line x1="55" y1="168" x2="36" y2="168" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+<circle cx="36" cy="61" r="3" fill="#16a34a"/>
+<line x1="55" y1="176" x2="36" y2="176" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
+<circle cx="36" cy="70" r="3" fill="#d97706"/>
+
+<!-- ══ OLED 2.42" ══ -->
+<rect x="110" y="90" width="120" height="80" rx="6" fill="#1f6feb" opacity="0.9"/>
+<rect x="110" y="90" width="120" height="80" rx="6" fill="none" stroke="#1e40af" stroke-width="1"/>
+<text x="170" y="120" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="500" fill="white">OLED 2.42"</text>
+<text x="170" y="134" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="rgba(255,255,255,0.85)">SSD1309 · 0x3C</text>
+<text x="170" y="146" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,0.7)">VCC GND SDA SCL</text>
+<text x="170" y="162" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.6)">soldar cap 100nF aqui</text>
+<!-- 100nF local OLED -->
+<rect x="244" y="94" width="36" height="24" rx="3" fill="#b45309" opacity="0.9"/>
+<text x="262" y="108" text-anchor="middle" font-family="var(--font-sans)" font-size="7" font-weight="500" fill="white">100nF</text>
+<text x="262" y="116" text-anchor="middle" font-family="var(--font-sans)" font-size="6" fill="rgba(255,255,255,0.8)">local</text>
+<!-- OLED → barramentos -->
+<line x1="170" y1="90" x2="170" y2="53" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="170" cy="53" r="3.5" fill="#c0392b"/>
+<line x1="155" y1="90" x2="155" y2="61" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+<circle cx="155" cy="61" r="3" fill="#16a34a"/>
+<line x1="145" y1="90" x2="145" y2="70" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
+<circle cx="145" cy="70" r="3" fill="#d97706"/>
+<line x1="156" y1="170" x2="156" y2="377" stroke="#2c3e50" stroke-width="2" stroke-linecap="round" stroke-dasharray="3,2" opacity="0.5"/>
+<circle cx="156" cy="377" r="3" fill="#2c3e50"/>
+
+<!-- ══ MPU-6050 ══ -->
+<rect x="110" y="210" width="120" height="90" rx="6" fill="#1f6feb" opacity="0.75"/>
+<rect x="110" y="210" width="120" height="90" rx="6" fill="none" stroke="#1e40af" stroke-width="1"/>
+<text x="170" y="240" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="500" fill="white">MPU-6050</text>
+<text x="170" y="254" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="rgba(255,255,255,0.85)">0x68</text>
+<text x="170" y="268" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,0.7)">VCC GND SDA SCL AD0</text>
+<!-- AD0 destaque -->
+<rect x="118" y="278" width="104" height="18" rx="3" fill="#dc2626" opacity="0.9"/>
+<text x="170" y="291" text-anchor="middle" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="white">AD0 → GND  obrigatório!</text>
+<!-- 100nF local MPU -->
+<rect x="244" y="214" width="36" height="24" rx="3" fill="#b45309" opacity="0.9"/>
+<text x="262" y="228" text-anchor="middle" font-family="var(--font-sans)" font-size="7" font-weight="500" fill="white">100nF</text>
+<text x="262" y="236" text-anchor="middle" font-family="var(--font-sans)" font-size="6" fill="rgba(255,255,255,0.8)">local</text>
+<!-- MPU → barramentos -->
+<line x1="170" y1="210" x2="170" y2="53" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-dasharray="3,2" opacity="0.6"/>
+<circle cx="170" cy="53" r="2.5" fill="#c0392b" opacity="0.7"/>
+<line x1="160" y1="210" x2="160" y2="61" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-dasharray="3,2"/>
+<circle cx="160" cy="61" r="2.5" fill="#16a34a" opacity="0.7"/>
+<line x1="150" y1="210" x2="150" y2="70" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-dasharray="3,2"/>
+<circle cx="150" cy="70" r="2.5" fill="#d97706" opacity="0.7"/>
+<!-- AD0 → GND fio curto -->
+<line x1="120" y1="296" x2="120" y2="377" stroke="#2c3e50" stroke-width="2" stroke-linecap="round"/>
+<circle cx="120" cy="377" r="3" fill="#2c3e50"/>
+<!-- GND MPU → trilha GND -->
+<line x1="140" y1="300" x2="140" y2="377" stroke="#2c3e50" stroke-width="2" stroke-linecap="round" stroke-dasharray="3,2" opacity="0.5"/>
+
+<!-- ══ CALLOUTS DIREITA ══ -->
+<g font-family="var(--font-sans)" font-size="11" fill="var(--color-text-primary)">
+
+<line x1="230" y1="130" x2="358" y2="105" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="360" y="109" fill="var(--color-text-primary)" font-weight="500">OLED</text>
+<text x="360" y="121" fill="var(--color-text-secondary)" font-size="9">Pinos: VCC GND SDA SCL</text>
+<text x="360" y="133" fill="var(--color-text-secondary)" font-size="9">Soldar cap 100nF nos pinos VCC/GND</text>
+<text x="360" y="145" fill="var(--color-text-secondary)" font-size="9">do próprio módulo — não na Central.</text>
+
+<line x1="280" y1="213" x2="358" y2="190" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="360" y="194" fill="var(--color-text-primary)" font-weight="500">Cap 100nF local</text>
+<text x="360" y="206" fill="var(--color-text-secondary)" font-size="9">Um para cada módulo.</text>
+<text x="360" y="218" fill="var(--color-text-secondary)" font-size="9">Quanto mais perto do chip melhor.</text>
+
+<line x1="215" y1="280" x2="358" y2="270" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="360" y="274" fill="#dc2626" font-weight="500">AD0 → GND</text>
+<text x="360" y="286" fill="var(--color-text-secondary)" font-size="9">Fio curto diretamente ao pino GND</text>
+<text x="360" y="298" fill="var(--color-text-secondary)" font-size="9">do MPU-6050. Fixa endereço 0x68.</text>
+<text x="360" y="310" fill="var(--color-text-secondary)" font-size="9">Se flutuar → sensor some sob vibração.</text>
+
+<line x1="66" y1="128" x2="358" y2="350" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="360" y="354" fill="var(--color-text-primary)" font-weight="500">KRE4-C</text>
+<text x="360" y="366" fill="var(--color-text-secondary)" font-size="9">Conecta ao KRE4 da Central.</text>
+<text x="360" y="378" fill="var(--color-text-secondary)" font-size="9">4 fios: 5V · GND · SDA · SCL</text>
+</g>
+</svg>
+<div class="tip">O eixo X do MPU-6050 deve estar alinhado ao eixo longitudinal do carro (frente-traseira) para leitura correta da Força G.</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAINEL 3 — PCB HALL
+══════════════════════════════════════════ -->
+<div class="panel" id="p2">
+<div class="legend">
+  <div class="leg"><div class="leg-line" style="background:#c0392b"></div>Trilha +5V</div>
+  <div class="leg"><div class="leg-line" style="background:#2c3e50"></div>Trilha GND</div>
+  <div class="leg"><div class="leg-line" style="background:#16a34a"></div>H0 (1ª/A0)</div>
+  <div class="leg"><div class="leg-line" style="background:#2563eb"></div>H3 (5ª/A1)</div>
+  <div class="leg"><div class="leg-line" style="background:#d97706"></div>H1 (2ª/A2)</div>
+  <div class="leg"><div class="leg-line" style="background:#9ca3af"></div>H2 (Ré/A3)</div>
+</div>
+<svg width="100%" viewBox="0 0 680 440" role="img">
+<title>PCB Hall do câmbio GL-Dash</title>
+<desc>Layout dos 4 sensores AH3503 na placa do câmbio com trilhas de sinal individuais, alimentação e borne KRE3-H para conexão ao cabo manga blindado</desc>
+<defs>
+  <marker id="ar3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <pattern id="holes3" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+    <circle cx="7" cy="7" r="1.4" fill="#b5aa8a" opacity="0.5"/>
+  </pattern>
+</defs>
+
+<!-- PLACA BASE -->
+<rect x="30" y="40" width="360" height="360" rx="6" fill="#c8b560" opacity="0.18"/>
+<rect x="30" y="40" width="360" height="360" rx="6" fill="url(#holes3)"/>
+<rect x="30" y="40" width="360" height="360" rx="6" fill="none" stroke="#a89440" stroke-width="2"/>
+<text class="ts" x="210" y="32" text-anchor="middle" fill="var(--color-text-secondary)">PCB Hall — câmbio / trambulador</text>
+
+<!-- Trilha 5V topo -->
+<rect x="36" y="55" width="348" height="7" rx="3" fill="#c0392b" opacity="0.85"/>
+<text x="36" y="51" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="#c0392b">+5V</text>
+<!-- Trilha GND base -->
+<rect x="36" y="388" width="348" height="7" rx="3" fill="#2c3e50" opacity="0.85"/>
+<text x="36" y="408" font-family="var(--font-sans)" font-size="10" font-weight="500" fill="#2c3e50">GND</text>
+
+<!-- ══ KRE3-H recepção ══ -->
+<rect x="38" y="130" width="52" height="140" rx="4" fill="#059669" opacity="0.9"/>
+<text x="64" y="155" text-anchor="middle" font-family="var(--font-sans)" font-size="8" font-weight="500" fill="white">KRE3-H</text>
+<text x="64" y="167" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.85)">6 pinos</text>
+<g font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.9)">
+<text x="42" y="185">① 5V</text>
+<text x="42" y="198">② GND</text>
+<text x="42" y="211">③ H0</text>
+<text x="42" y="224">④ H3</text>
+<text x="42" y="237">⑤ H1</text>
+<text x="42" y="250">⑥ H2</text>
+</g>
+<!-- KRE3-H → trilha 5V / GND -->
+<line x1="64" y1="130" x2="64" y2="62" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="64" cy="62" r="3.5" fill="#c0392b"/>
+<line x1="54" y1="270" x2="54" y2="388" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="54" cy="388" r="3.5" fill="#2c3e50"/>
+
+<!-- trilhas de sinal KRE → sensores (verticais, coloridas) -->
+<!-- H0 -->
+<line x1="90" y1="211" x2="160" y2="211" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+<!-- H3 -->
+<line x1="90" y1="224" x2="160" y2="224" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+<!-- H1 -->
+<line x1="90" y1="237" x2="160" y2="300" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+<!-- H2 -->
+<line x1="90" y1="250" x2="160" y2="315" stroke="#9ca3af" stroke-width="3" stroke-linecap="round"/>
+
+<!-- ══ SENSOR HALL 0 — 1ª marcha (quadrante sup esq) ══ -->
+<rect x="160" y="80" width="72" height="70" rx="6" fill="#16a34a" opacity="0.9"/>
+<rect x="160" y="80" width="72" height="70" rx="6" fill="none" stroke="#14532d" stroke-width="1"/>
+<text x="196" y="108" text-anchor="middle" font-family="var(--font-sans)" font-size="9" font-weight="500" fill="white">AH3503</text>
+<text x="196" y="121" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,0.9)">HALL0</text>
+<text x="196" y="133" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.8)">→ A0 · 1ª marcha</text>
+<!-- pinos -->
+<text x="163" y="147" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.7)">VCC · GND · SIG</text>
+<!-- VCC / GND / SIG H0 -->
+<line x1="174" y1="80" x2="174" y2="62" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/>
+<circle cx="174" cy="62" r="2.5" fill="#c0392b"/>
+<line x1="188" y1="150" x2="188" y2="388" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3,2" opacity="0.4"/>
+<line x1="202" y1="150" x2="202" y2="211" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+
+<!-- ══ SENSOR HALL 1 — 2ª marcha (quadrante sup dir) ══ -->
+<rect x="290" y="80" width="72" height="70" rx="6" fill="#d97706" opacity="0.9"/>
+<rect x="290" y="80" width="72" height="70" rx="6" fill="none" stroke="#92400e" stroke-width="1"/>
+<text x="326" y="108" text-anchor="middle" font-family="var(--font-sans)" font-size="9" font-weight="500" fill="white">AH3503</text>
+<text x="326" y="121" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,0.9)">HALL1</text>
+<text x="326" y="133" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.8)">→ A2 · 2ª marcha</text>
+<text x="293" y="147" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.7)">VCC · GND · SIG</text>
+<line x1="304" y1="80" x2="304" y2="62" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/>
+<circle cx="304" cy="62" r="2.5" fill="#c0392b"/>
+<line x1="318" y1="150" x2="318" y2="388" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3,2" opacity="0.4"/>
+<line x1="334" y1="150" x2="334" y2="237" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
+<line x1="334" y1="237" x2="90" y2="237" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
+
+<!-- ══ SENSOR HALL 3 — 5ª marcha (quadrante inf esq) ══ -->
+<rect x="160" y="270" width="72" height="70" rx="6" fill="#2563eb" opacity="0.9"/>
+<rect x="160" y="270" width="72" height="70" rx="6" fill="none" stroke="#1e3a8a" stroke-width="1"/>
+<text x="196" y="298" text-anchor="middle" font-family="var(--font-sans)" font-size="9" font-weight="500" fill="white">AH3503</text>
+<text x="196" y="311" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,0.9)">HALL3</text>
+<text x="196" y="323" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.8)">→ A1 · 5ª marcha</text>
+<text x="163" y="337" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.7)">VCC · GND · SIG</text>
+<line x1="174" y1="270" x2="174" y2="62" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-dasharray="3,2" opacity="0.5"/>
+<line x1="188" y1="340" x2="188" y2="388" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3,2" opacity="0.4"/>
+<line x1="202" y1="340" x2="202" y2="224" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+<line x1="202" y1="224" x2="90" y2="224" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+
+<!-- ══ SENSOR HALL 2 — Ré (quadrante inf dir) ══ -->
+<rect x="290" y="270" width="72" height="70" rx="6" fill="#6b7280" opacity="0.9"/>
+<rect x="290" y="270" width="72" height="70" rx="6" fill="none" stroke="#374151" stroke-width="1"/>
+<text x="326" y="298" text-anchor="middle" font-family="var(--font-sans)" font-size="9" font-weight="500" fill="white">AH3503</text>
+<text x="326" y="311" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="rgba(255,255,255,0.9)">HALL2</text>
+<text x="326" y="323" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.8)">→ A3 · Ré</text>
+<text x="293" y="337" font-family="var(--font-sans)" font-size="7" fill="rgba(255,255,255,0.7)">VCC · GND · SIG</text>
+<line x1="304" y1="270" x2="304" y2="62" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-dasharray="3,2" opacity="0.4"/>
+<line x1="318" y1="340" x2="318" y2="388" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3,2" opacity="0.4"/>
+<line x1="334" y1="340" x2="334" y2="250" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/>
+<line x1="334" y1="250" x2="90" y2="250" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/>
+
+<!-- ímãs (representados por círculos cinza entre os sensores) -->
+<circle cx="226" cy="185" r="12" fill="none" stroke="#374151" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.6"/>
+<text x="226" y="189" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="var(--color-text-secondary)">N35</text>
+<circle cx="356" cy="185" r="12" fill="none" stroke="#374151" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.6"/>
+<text x="356" y="189" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="var(--color-text-secondary)">N35</text>
+<circle cx="226" cy="255" r="12" fill="none" stroke="#374151" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.6"/>
+<text x="226" y="259" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="var(--color-text-secondary)">N35</text>
+<circle cx="356" cy="255" r="12" fill="none" stroke="#374151" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.6"/>
+<text x="356" y="259" text-anchor="middle" font-family="var(--font-sans)" font-size="7" fill="var(--color-text-secondary)">N35</text>
+<text x="226" y="220" text-anchor="middle" font-family="var(--font-sans)" font-size="8" fill="var(--color-text-secondary)" font-style="italic">← ímãs na haste →</text>
+
+<!-- ══ CALLOUTS DIREITA ══ -->
+<g font-family="var(--font-sans)" font-size="11" fill="var(--color-text-primary)">
+
+<line x1="390" y1="115" x2="450" y2="90" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="452" y="94" fill="var(--color-text-primary)" font-weight="500">Trilha +5V</text>
+<text x="452" y="106" fill="var(--color-text-secondary)" font-size="9">Liga VCC de todos os sensores.</text>
+<text x="452" y="118" fill="var(--color-text-secondary)" font-size="9">Perna longa (+) de cada AH3503.</text>
+
+<line x1="390" y1="200" x2="450" y2="170" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="452" y="174" fill="var(--color-text-primary)" font-weight="500">Trilhas de sinal</text>
+<text x="452" y="186" fill="var(--color-text-secondary)" font-size="9">Cada cor = uma marcha.</text>
+<text x="452" y="198" fill="var(--color-text-secondary)" font-size="9">Manter separadas, sem cruzar.</text>
+
+<line x1="232" y1="195" x2="450" y2="255" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="452" y="259" fill="var(--color-text-primary)" font-weight="500">Ímãs N35</text>
+<text x="452" y="271" fill="var(--color-text-secondary)" font-size="9">Colados na haste do trambulador.</text>
+<text x="452" y="283" fill="var(--color-text-secondary)" font-size="9">Distância ao sensor: 2-4 mm.</text>
+
+<line x1="90" y1="200" x2="450" y2="340" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3,2"/>
+<text x="452" y="344" fill="var(--color-text-primary)" font-weight="500">KRE3-H</text>
+<text x="452" y="356" fill="var(--color-text-secondary)" font-size="9">Conecta ao cabo manga blindado.</text>
+<text x="452" y="368" fill="var(--color-text-secondary)" font-size="9">Malha → GND somente na Central.</text>
+<text x="452" y="380" fill="var(--color-text-secondary)" font-size="9">Nunca aterrar a malha aqui.</text>
+</g>
+</svg>
+<div class="tip">Os 4 sensores formam uma grade 2×2 em torno da base da alavanca. Calibrar os limiares com o modo de calibração (segurar botão D3 por 3s) após a instalação.</div>
+</div>
+
+<script>
+function sw(i){
+  ['p0','p1','p2'].forEach((id,j)=>{
+    document.getElementById(id).style.display = j===i ? 'block' : 'none';
+    document.querySelectorAll('.tab')[j].classList.toggle('on', j===i);
+  });
+}
+</script>
